@@ -237,7 +237,7 @@ body:has(.hardware-connect-slide.active) .slide-nav {
 .hardware-connect-slide.hc-success-rx .hc-result p{font-size:clamp(18px,1.8vw,25px)!important;line-height:1.35}
 
 /* Keep the shared connection page inside the lesson's 16:9 frame. */
-.hardware-connect-slide.active{top:12px!important;bottom:42px!important;height:auto!important;min-height:0!important}
+html body .wrap>.slide.hardware-connect-slide.active{top:12px!important;bottom:42px!important;height:calc(100% - 54px)!important;min-height:0!important}
 .hardware-connect-slide .hc-workspace{height:100%!important}
 .hardware-connect-slide .hc-content{left:145px;top:95px}
 .hardware-connect-slide .hc-usb{margin-top:20px}
@@ -245,5 +245,9 @@ body:has(.hardware-connect-slide.active) .slide-nav {
 .hardware-connect-slide .hc-connect-buttons{margin:15px 0;gap:18px}
 .hardware-connect-slide .hc-block-list{width:56%;padding:16px;gap:14px}
 .hardware-connect-slide .hc-block-list .entry-block{font-size:18px;gap:8px;padding:8px 12px;white-space:nowrap}
-.hardware-connect-slide.hc-success-rx .hc-overlay{inset:250px 25px auto auto;width:30%}
+.hardware-connect-slide.hc-success-rx .hc-overlay{inset:290px 25px auto auto;width:26%}
 .hardware-connect-slide.hc-success-rx .hc-result p{font-size:20px!important}
+
+.hardware-connect-slide .hc-content h2{margin-bottom:16px}
+.hardware-connect-slide.hc-success-rx .hc-program-shot{height:75px}
+.hardware-connect-slide.hc-success-rx .hc-result p{font-size:18px!important}

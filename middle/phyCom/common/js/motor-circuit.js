@@ -4,7 +4,7 @@ const POWER_COLOR="#e53935",GROUND_COLOR="#222222",SIGNAL_COLORS=["#1976d2","#43
 const boardDef={pins:[{name:"D3",x:.79468,y:.06550},{name:"5V",x:.55263,y:.91500},{name:"GND2",x:.62169,y:.91500}]};
 // Connector socket centers measured from each uploaded image, independently of LED.
 const servo=document.body.dataset.motor==='servo';
-const moduleDef={pins:servo?[{name:"S",x:.119,y:.899},{name:"V",x:.150,y:.923},{name:"G",x:.182,y:.947}]:[{name:"S",x:.941,y:.475},{name:"V",x:.941,y:.544},{name:"G",x:.941,y:.614}]};
+const moduleDef={pins:servo?[{name:"S",x:.902,y:.490},{name:"V",x:.902,y:.548},{name:"G",x:.902,y:.606}]:[{name:"S",x:.941,y:.475},{name:"V",x:.941,y:.544},{name:"G",x:.941,y:.614}]};
 const plannedConnections=[{from:"V",to:"5V"},{from:"G",to:"GND2"},{from:"S",to:"D3"}];
 let wires=[],currentConnectionStep=0;
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
