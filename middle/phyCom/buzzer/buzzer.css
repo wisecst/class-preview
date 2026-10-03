@@ -149,10 +149,6 @@ body.buzzer-lesson.entry-page{align-items:flex-start}
 .activity-times th,.activity-times td{padding:6px 12px;text-align:left;border-bottom:1px solid #cbdce7}.activity-times thead{color:#205f83}
 #triadPage .code-playing{outline:5px solid #ffd400;outline-offset:-3px}
 /* Only the buzzer's success action observes data while Entry stays visible. */
-.buzzer-lesson .hc-success-rx .hc-program-shot{height:115px;object-position:center}
-.buzzer-lesson .hc-success-rx .hc-overlay{inset:335px 25px auto auto;width:calc(43% - 73.1px);background:transparent}
-.buzzer-lesson .hc-success-rx .hc-result{width:100%!important;padding:12px!important;max-width:100%;box-shadow:0 6px 18px #18364a35}
-.buzzer-lesson .hc-success-rx .hc-result p{font-size:clamp(18px,1.8vw,25px)!important;line-height:1.35}
 .direct-play{display:block}.birthday-run:disabled{opacity:.4;cursor:default}
 
 

@@ -7,8 +7,7 @@
   "use strict";
   const q = (s) => document.querySelector(s),
     asset = "../assets/";
-  const buzzerFlow = document.body.classList.contains("buzzer-lesson");
-  const actionSteps = buzzerFlow ? [0, 1, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  const actionSteps = [0, 1, 2, 3, 4, 5];
   const original = [...document.querySelectorAll(".slide")];
   const page = document.createElement("section");
   page.className = "slide entry-slide hardware-connect-slide";
@@ -36,9 +35,6 @@
     "연결 프로그램 열기를 누르세요.",
     "검색 창에서 오렌지 보드를 검색한 후 선택하세요.",
     "하드웨어 연결 성공을 확인하세요.",
-    "엔트리로 돌아오면 하드웨어 블록이 표시됩니다.",
-    "데이터가 오갈 때 RX LED를 확인하세요.",
-    "하드웨어 연결 완료 · 다음은 코드 작성입니다.",
   ];
   function close() {
     overlay.hidden = true;
@@ -47,8 +43,8 @@
   }
   function render() {
     close();
-    const rxStep = buzzerFlow ? step === 5 : step === 7;
-    page.classList.toggle("hc-success-rx", buzzerFlow && rxStep);
+    const rxStep = step === 5;
+    page.classList.toggle("hc-success-rx", rxStep);
     page.querySelector("h2").textContent = titles[step];
     page.querySelector(".hc-usb").hidden = step >= 2;
     page.querySelector(".hc-entry").hidden = step < 2;
@@ -71,7 +67,7 @@
       (step === 4
         ? "hardware-connect-select.png"
         : "hardware-connect-success.png");
-    page.querySelector(".hc-install").hidden = step !== 5 || buzzerFlow;
+    page.querySelector(".hc-install").hidden = true;
     page.querySelector(".hc-block-list").hidden = step < 5;
     if (step === 1 || rxStep) {
       overlay.hidden = false;
@@ -99,7 +95,7 @@
   function enter(reverse, callback) {
     resume = callback;
     active = true;
-    step = reverse ? (buzzerFlow ? 5 : 8) : 0;
+    step = reverse ? 5 : 0;
     original.forEach((s) => s.classList.remove("active"));
     page.classList.add("active");
     document.body.classList.add("entry-page", "after-intro");
@@ -119,7 +115,7 @@
   }
   function move(direction) {
     close();
-    if (direction > 0 && step === (buzzerFlow ? 5 : 8)) leave(2);
+    if (direction > 0 && step === 5) leave(2);
     else if (direction < 0 && step === 0) leave(1);
     else {
       step = actionSteps[actionSteps.indexOf(step) + direction];
@@ -159,7 +155,8 @@
     });
   });
   sidebar.addEventListener("click", () => {
-    if (resume) enter(false, resume);
+    if (window.hardwareLessonAdapter) enter(false, window.hardwareLessonAdapter.resume);
+    else if (resume) enter(false, resume);
     else window.hardwareConnect.open?.();
   });
   document.addEventListener(
@@ -199,14 +196,14 @@
   );
   overlay.querySelector("button").addEventListener("click", close);
   page.querySelector(".hc-program-close").addEventListener("click", () => {
-    if (buzzerFlow && step === 5) { close(); return; }
+    if (step === 5) { close(); return; }
     page.querySelector(".hc-program-window").hidden = true;
     page.querySelector(".hc-install").hidden = true;
   });
   window.lessonUI.bindOutside({key:'hardware-result',isOpen:()=>!overlay.hidden,inside:'.hc-result',close});
   page.querySelector(".hc-entry").addEventListener("click", e => {
     if (step === 5 && !e.target.closest(".hc-program-window")) {
-      if (buzzerFlow) close();
+      close();
       page.querySelector(".hc-program-window").hidden = true;
       page.querySelector(".hc-install").hidden = true;
     }

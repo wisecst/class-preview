@@ -64,3 +64,8 @@ body[data-motor="dc"].after-intro #workspace.circuit-demo{width:auto!important;h
 [data-motor="dc"] #workspace #module{left:2%;top:18%}
 [data-motor="dc"] #workspace #board{left:49%;top:14%}
 
+
+/* Servo circuit uses the established DC circuit frame and routing space. */
+body[data-motor="servo"].after-intro #workspace.circuit-demo{width:auto!important;height:100%!important;max-width:100%!important;max-height:100%!important;min-height:0!important;aspect-ratio:724/390;margin:0 auto!important}
+[data-motor="servo"] #workspace #module{left:2%;top:18%}
+[data-motor="servo"] #workspace #board{left:49%;top:14%}
