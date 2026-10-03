@@ -251,3 +251,6 @@ html body .wrap>.slide.hardware-connect-slide.active{top:12px!important;bottom:4
 .hardware-connect-slide .hc-content h2{margin-bottom:16px}
 .hardware-connect-slide.hc-success-rx .hc-program-shot{height:75px}
 .hardware-connect-slide.hc-success-rx .hc-result p{font-size:18px!important}
+
+html body:has(.hardware-connect-slide.active) main.wrap{height:min(100vh,calc((100vw - 190px)*.5625))!important}
+:fullscreen body:has(.hardware-connect-slide.active) main.wrap{height:min(100vh,56.25vw)!important}
