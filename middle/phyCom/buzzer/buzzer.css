@@ -181,3 +181,5 @@ body.buzzer-lesson.entry-page{align-items:flex-start}
 .student-code-program .entry-block{display:flex!important;visibility:visible!important;opacity:1!important;width:max-content;margin:0;font-size:22px}
 .student-code-program .code-playing{outline:5px solid #ffd400;outline-offset:-3px}
 .student-current{font-size:clamp(17px,1.5vw,23px);color:#b84c00}
+
+.student-heading .student-credit{display:inline-block;margin-left:14px;font-size:16px;font-weight:600;vertical-align:middle;white-space:nowrap;color:#547080}
