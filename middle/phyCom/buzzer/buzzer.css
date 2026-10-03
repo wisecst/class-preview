@@ -157,8 +157,8 @@ body.buzzer-lesson.entry-page{align-items:flex-start}
 
 
 /* Student work: notation above a readable, independently scrolling original. */
-#studentWorkPage{padding:12px 28px!important;min-height:0}
-.student-work{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,44%) minmax(0,1fr);gap:10px;color:#294e66}
+#studentWorkPage.active{top:12px!important;bottom:42px!important;height:auto!important;min-height:0!important;margin:0!important;padding:12px 28px!important}
+.student-work{height:100%;min-height:0;display:grid;grid-template-rows:auto minmax(0,48%) minmax(0,1fr);gap:10px;color:#294e66}
 .student-heading{display:flex;justify-content:space-between;align-items:center;gap:20px}
 .student-heading h2{margin:0;font-size:clamp(24px,2.4vw,36px);line-height:1.1}
 .student-heading p{margin:4px 0 0;font-size:clamp(20px,1.8vw,28px);font-weight:800}
