@@ -68,7 +68,7 @@
   q('#slideSubtitle').textContent=name+' '+(page===0?'1. 개념설명':page===1?'2. 회로 연결':'4. 실행');
   qa('.slide-sidebar-item').forEach((el,i)=>{el.classList.toggle('active',i===page);if(i===page)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current')});
   if(page===1)requestAnimationFrame(()=>{window.lessonCircuit.refresh();window.lessonCircuit.setStep(circuitStep)});
-  if(page===last)renderCode();syncNav();
+  if(page===last)renderCode();syncNav();window.hardwareLessonAdapter?.sync?.(page);
  }
  function next(){
   if(page===0){showPage(1);return}
