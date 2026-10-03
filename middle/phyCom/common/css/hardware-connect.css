@@ -1,0 +1,232 @@
+/* Shared hardware connection page; all additions are scoped to this component. */
+.hardware-connect-slide .hc-workspace {
+  height: 100%;
+  width: 100%;
+}
+.hc-content {
+  position: absolute;
+  left: 145px;
+  right: 25px;
+  top: 95px;
+  bottom: 30px;
+  background-image: radial-gradient(#c9e4f3 1.15px, transparent 1.15px);
+  background-size: 14px 14px;
+}
+.hc-content h2 {
+  margin: 0 0 28px;
+}
+.hc-usb {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 65px;
+}
+.hc-usb > div {
+  width: 36%;
+  text-align: center;
+}
+.hc-usb img {
+  width: 100%;
+}
+.hc-usb > svg {
+  width: 22%;
+  order: 2;
+}
+.hc-usb strong {
+  display: block;
+  font-size: 25px;
+  margin-top: 20px;
+}
+.hc-usb > div > svg {
+  width: 90%;
+}
+.hc-entry {
+  height: 440px;
+  position: relative;
+}
+.hc-connect-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  width: 380px;
+  margin: 25px 0;
+}
+.hc-connect-buttons button {
+  background: white;
+  border: 3px solid #5484fb;
+  border-radius: 12px;
+  color: #426cf0;
+  padding: 20px;
+  font-size: 30px;
+  font-weight: 800;
+}
+.hc-focus {
+  outline: 6px solid #ffd535;
+  outline-offset: 5px;
+}
+.hardware-connect-slide .hc-program-shot {
+  height: auto;
+  width: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left;
+  display: block;
+}
+.hc-install {
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+.hc-block-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 25px;
+  width: 54%;
+  background: #f7fcff;
+  height: auto;
+  overflow: visible;
+}
+.hardware-connect-slide .hc-block-list .entry-block {
+  font-size: 23px;
+  position: relative;
+  opacity: 1 !important;
+  visibility: visible;
+  max-width: 100%;
+  filter: none !important;
+}
+.hc-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(19, 39, 56, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 160;
+}
+.hardware-connect-slide .hc-result {
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
+  width: min(940px, calc((100vh - 160px) * 1.353)) !important;
+  max-width: 92%;
+  background: white;
+  padding: 30px !important;
+  border-radius: 24px;
+}
+.hardware-connect-slide .hc-board {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  pointer-events: none;
+}
+.hc-board img {
+  width: 100%;
+  height: auto;
+}
+.hardware-connect-slide .hc-result p {
+  font-size: 30px !important;
+  font-weight: 900;
+  text-align: center;
+  margin: 20px 0 0;
+  margin-top: 20px !important;
+}
+.hc-led {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 3.3%;
+  height: 2%;
+  border-radius: 3px;
+}
+.hc-on {
+  left: 82.5%;
+  top: 26.1%;
+  background: #36a5ff;
+  box-shadow: 0 0 15px 8px #168fff;
+}
+.hc-rx {
+  left: 38.6%;
+  top: 46.4%;
+  background: #ff3b34;
+  box-shadow: 0 0 15px 8px #ff312d;
+}
+.hc-blinking {
+  animation: hc-rx-data 0.65s steps(1) infinite;
+}
+.hardware-connect-slide [hidden] {
+  display: none !important;
+}
+.hardware-connect-slide .entry-tabs {
+  width: 96px;
+  position: absolute;
+  left: 0;
+  top: 52px;
+  bottom: 0;
+}
+.hardware-connect-slide .entry-tab {
+  width: 96px;
+  height: 96px;
+  padding: 0;
+  border: 0;
+  position: relative;
+}
+.hardware-connect-slide .entry-tab-image {
+  width: 96px;
+  height: 96px;
+  display: block;
+}
+.hardware-connect-slide .entry-tab-image-selected {
+  display: none;
+}
+.hardware-connect-slide .active-tab .entry-tab-image-selected {
+  display: block;
+}
+.hardware-connect-slide .active-tab .entry-tab-image-unselected {
+  display: none;
+}
+body:has(.hardware-connect-slide.active) .slide-nav {
+  z-index: 180 !important;
+}
+.hardware-connect-slide .hc-result .entry-result-close {
+  z-index: 3;
+  top: 8px;
+  right: 8px;
+}
+.hc-usb > div:first-child {
+  order: 3;
+}
+.hc-usb > div:last-child {
+  order: 1;
+}
+@keyframes hc-rx-data {
+  0%,
+  60% {
+    opacity: 1;
+  }
+  30%,
+  85% {
+    opacity: 0.08;
+  }
+}
+
+.hc-program-window {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 43%;
+  padding: 28px 10px 10px;
+  background: #fff;
+  border: 2px solid #cfe1ee;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px #18364a35;
+  z-index: 2;
+}
+.hc-install { width: 54%; }
+.hc-connected .hc-connect-buttons { margin: 0 0 15px; }
+.hc-connected .hc-connect-buttons button { padding: 10px; font-size: 24px; }
+.pin13-board-view .hc-pin-status { width: 2.8%; height: 1.8%; }
+.pin13-board-view .hc-on { box-shadow: 0 0 6px 3px #168fff; }
+.pin13-board-view .hc-rx { box-shadow: 0 0 6px 3px #ff312d; animation: none; }
+[aria-hidden="false"] .pin13-board-view .hc-rx { animation: hc-rx-data 0.65s steps(1) infinite; }
