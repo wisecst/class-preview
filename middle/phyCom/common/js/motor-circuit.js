@@ -24,8 +24,8 @@ function buildWirePoints(w,left,top){
  const e=getWireEnds(w),start=getPinPosition(e.modulePin),end=getPinPosition(e.boardPin),s=circuitScale();
  const index={G:0,V:1,S:2}[e.modulePin.dataset.pin];
  const module=getModuleContainer(),mp=componentPosition(module);
- const lane=Math.max(mp.y+module.offsetHeight,top+getBoardContainer().offsetHeight)+(20+(servo?index:1-index)*(servo?32:24))*s;
- if(!servo){
+ const lane=Math.max(mp.y+module.offsetHeight,top+getBoardContainer().offsetHeight)+(20+(1-index)*24)*s;
+ {
   const channel=mp.x+module.offsetWidth+(12+index*10)*s;
   if(e.modulePin.dataset.pin==='S'){
    const upper=Math.max(10,top-24*s);
@@ -33,15 +33,11 @@ function buildWirePoints(w,left,top){
   }
   return[start,{x:channel,y:start.y},{x:channel,y:lane},{x:end.x,y:lane},end];
  }
- if(e.modulePin.dataset.pin==='S'){
-  const channel=left-(38+index*18)*s,upper=Math.max(10,top-24*s);
-  return[start,{x:start.x,y:lane},{x:channel,y:lane},{x:channel,y:upper},{x:end.x,y:upper},end];
- }
- return[start,{x:start.x,y:lane},{x:end.x,y:lane},end];
+
 }
 const path=pts=>pts.map((p,i)=>(i?'L ':'M ')+p.x+' '+p.y).join(' ');
 function labelPos(w,pts){
- const i=servo?(getWireEnds(w).modulePin.dataset.pin==='S'?3:1):2;
+ const i=2;
  return{x:(pts[i].x+pts[i+1].x)/2,y:pts[i].y};
 }
 function drawWires(){const w=workspace(),svg=document.getElementById('wireLayer'),ll=document.getElementById('wireLabelLayer');if(!wires.length){svg.innerHTML='';ll.innerHTML='';return;}const oldPaths=[...svg.querySelectorAll('.wire')],oldLabels=[...ll.querySelectorAll('.wire-label')];const board=getBoardContainer(),{x:left,y:top}=componentPosition(board);svg.setAttribute('viewBox',`0 0 ${w.clientWidth} ${w.clientHeight}`);wires.forEach((wire,wi)=>{const pts=buildWirePoints(wire,left,top);let p=oldPaths[wi];if(!p){p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','wire wire-instant');svg.appendChild(p);}p.setAttribute('d',path(pts));p.setAttribute('stroke',wire.color);let l=oldLabels[wi];if(!l){l=document.createElement('div');l.className='wire-label wire-label-instant';ll.appendChild(l);}const e=getWireEnds(wire);l.textContent=getDisplayPinName(e.modulePin.dataset.pin)+' → '+getDisplayPinName(e.boardPin.dataset.pin);l.style.backgroundColor=wire.color;l.style.color='#fff';const pos=labelPos(wire,pts);const pad=12*circuitScale();l.style.left=clamp(pos.x,l.offsetWidth/2+pad,w.clientWidth-l.offsetWidth/2-pad)+'px';l.style.top=clamp(pos.y,l.offsetHeight/2+pad,w.clientHeight-l.offsetHeight/2-pad)+'px';});oldPaths.slice(wires.length).forEach(x=>x.remove());oldLabels.slice(wires.length).forEach(x=>x.remove());}
