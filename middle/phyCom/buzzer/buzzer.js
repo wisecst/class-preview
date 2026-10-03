@@ -11,7 +11,7 @@ const birthday=[
 // One curated educational melody drives playback, notation and abbreviated code.
 const canon=window.buzzerCanonScore.notes,canonBPM=window.buzzerCanonScore.bpm,canonScorePageSize=8;
 const triad=[['도',4,.5,60],['미',4,.5,64],['솔',4,.5,67]];
-const limits=[4,3,8,2,37,2],titles=['1. 개념','2. 회로 연결','3. 도·미·솔 연주하기','4. 생일축하노래 연주하기','5. 악보를 엔트리 코드로 표현하기','6. 캐논 연주하기'];
+const limits=[4,3,8,2,37,2,0],titles=['1. 개념','2. 회로 연결','3. 도·미·솔 연주하기','4. 생일축하노래 연주하기','5. 악보를 엔트리 코드로 표현하기','6. 캐논 연주하기','7. 학생 예시 작품'];
 const $=s=>document.querySelector(s),pages=[...document.querySelectorAll('[data-page]')];
 let page=0,step=0,dialog=null,returnFocus=null,audio=null,voice=null,gain=null,frame=0,session=0,startedAt=0,duration=0,scheduledCycle=-1;
 const field=v=>`<span class="field">${v}<span class="select-arrow">▼</span></span>`;
@@ -67,13 +67,13 @@ function activityScoreSVG(){
  return svg+'</svg>';
 }
 const activityTypes=[...new Map(activityNotes.map(n=>[n[4].name,n])).values()];
-function durationBar(seconds){const width=Math.max(56,seconds*130);return '<span class="duration-bar" style="--length:'+seconds+';width:'+width+'px"><i>'+seconds+'초</i></span>';}
+function durationBar(seconds){return '<span class="duration-bar" aria-label="'+(seconds/.25)+'칸">'+'<i aria-hidden="true"></i>'.repeat(seconds/.25)+'</span>';}
 function renderActivity(){
  const focus=[[],['4분음표'],['2분음표'],['점8분음표'],['8분음표'],activityTypes.map(n=>n[4].name)][step];
  activityRoot.querySelectorAll('[data-activity-note]').forEach(el=>el.classList.toggle('activity-current',focus.includes(activityNotes[+el.dataset.activityNote][4].name)));
  activityRoot.querySelectorAll('.activity-seconds').forEach(el=>el.setAttribute('visibility',step===5?'visible':'hidden'));
- const basis='<p class="activity-basis">기준: <b>4분음표 = 1초</b></p>';
- const row=n=>{const seconds=n[2];return '<div class="duration-row"><span class="duration-symbol">'+({half:'𝅗𝅥',quarter:'♩',eighth:'♪', '16th':'♬'}[n[4].type]||'♪')+'</span><b>'+n[4].name+'</b>'+durationBar(seconds)+'<strong>'+seconds+'초</strong></div>';};
+ const basis='<p class="activity-basis">이번 활동의 기준: <b>4분음표 = 1초</b></p>';
+ const row=n=>{const seconds=n[2];return '<div class="duration-row"><b>'+n[4].name+'</b>'+durationBar(seconds)+'<strong>'+seconds+'초</strong></div>';};
  const views=[
  '<h3>음표 모양과 연주 시간을 비교해 봅시다.</h3><p>위 악보에서 서로 다른 음표 모양을 찾아보세요.</p>',
  basis+'<h3>4분음표를 1초로 정합니다.</h3>'+row(activityNotes[1]),
@@ -85,6 +85,9 @@ function renderActivity(){
  activityRoot.querySelector('.activity-explanation').innerHTML=views[step];
  activityRoot.querySelectorAll('.entry-tab').forEach(el=>el.classList.toggle('active-tab',el.dataset.tab==='hardware'));
 }
+const studentRoot=$('#studentWorkPage');
+const studentNotes=window.buzzerStudentWork.notes;
+window.buzzerStudentWork.init(studentRoot);
 let canonCompleted=false,canonSaved=false;
 const saveWrap=canonRoot.querySelector('.entry-save-wrap'),saveButton=canonRoot.querySelector('.entry-save-btn'),saveMenu=canonRoot.querySelector('.entry-save-menu'),completeButton=canonRoot.querySelector('.entry-complete-btn');
 function resetCanonFlow(){canonCompleted=false;canonSaved=false;saveButton.disabled=true;completeButton.disabled=true;saveWrap.classList.remove('save-focus');completeButton.classList.remove('complete-focus');saveMenu.classList.remove('show');saveMenu.setAttribute('aria-hidden','true');canonRoot.querySelector('.canon-progress').textContent='캐논을 마지막 음까지 연주하면 저장할 수 있어요.';}
@@ -117,13 +120,13 @@ function fitCode(){
  program.style.transform=`scale(${Math.max(.1,scale)})`;
 }
 function renderCode(birth){if(!birth)renderTriad();requestAnimationFrame(fitCode);}
-function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===page));document.body.classList.toggle('after-intro',(page>=2));document.body.classList.toggle('entry-page',page>=2);document.querySelectorAll('.slide-sidebar-item').forEach((b,i)=>{b.classList.toggle('active',i===page);if(i===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#subtitle').textContent=titles[page];$('#slides').textContent=window.hardwareConnect?.number(page,6)||`${page+1} / 6`;$('#prev').disabled=page===0&&step===0;$('#next').disabled=page===5&&step===limits[5];
+function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===page));document.body.classList.toggle('after-intro',(page>=2));document.body.classList.toggle('entry-page',page>=2);document.querySelectorAll('.slide-sidebar-item').forEach((b,i)=>{b.classList.toggle('active',i===page);if(i===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#subtitle').textContent=titles[page];$('#slides').textContent=window.hardwareConnect?.number(page,7)||`${page+1} / 7`;$('#prev').disabled=page===0&&step===0;$('#next').disabled=page===6&&step===limits[6];
  if(page===1){window.lessonCircuit.refresh();window.lessonCircuit.setStep(step);$('#circuitGuide').textContent=['VCC → 5V, GND → GND, IN → D3 순서로 연결합니다.','VCC → 5V : 전원 공급','GND → GND : 전원의 −극 연결','IN → D3 : 소리 제어 신호 연결'][step];}
  if(page>=2){if(page===4)renderActivity();else renderCode(page!==2);requestAnimationFrame(fitCode);}
  if(page===5&&step===1&&dialog!=='canon')openDialog('canon');
  if(page===0&&step===1)openDialog('principle');else if(page===0&&step===3)openDialog('pins');else if(page===2&&step===3)openDialog('pin13');else if(page===2&&step===8)openDialog('triad');else if(page===3&&step===1)openDialog('birthday');
 }
-function move(direction){closeDialog(false);const target=direction>0&&step===limits[page]?page+1:direction<0&&step===0?page-1:page;if(window.hardwareConnect?.before(page,target,n=>{page=n;step=n===1?limits[1]:0;render();}))return;if(direction>0){if(step<limits[page])step++;else if(page<5){page++;step=0;}}else if(step>0)step--;else if(page>0){page--;step=limits[page];}render();}
+function move(direction){closeDialog(false);const target=direction>0&&step===limits[page]?page+1:direction<0&&step===0?page-1:page;if(window.hardwareConnect?.before(page,target,n=>{page=n;step=n===1?limits[1]:0;render();}))return;if(direction>0){if(step<limits[page])step++;else if(page<6){page++;step=0;}}else if(step>0)step--;else if(page>0){page--;step=limits[page];}render();}
 function triadScoreSVG(){
  const bottom=220,spacing=32,xs=[280,580,880],ys=[bottom+spacing,bottom,bottom-spacing];
  let s='<svg class="triad-score" viewBox="0 0 1160 380" role="img" aria-label="높은음자리표 오선보: 4옥타브 도, 미, 솔"><title>도4 → 미4 → 솔4 · 각 0.5초</title>';
@@ -245,11 +248,12 @@ function openDialog(kind){if(dialog)closeDialog(false);returnFocus=document.acti
  }
  $('.buzzer-dialog').focus();
 }
-function clearHighlight(){document.querySelectorAll('[data-note].playing,.code-playing').forEach(el=>el.classList.remove('playing','code-playing'));}
-function stopAudio(){session++;document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}if(audio&&audio.state==='running')audio.suspend().catch(()=>{});}
-function closeDialog(restore=true){if(restore&&page===5&&dialog==='canon'){step=2;$('#next').disabled=true;}stopAudio();$('#pinDialog').close();dialog=null;const overlay=$('#dialogOverlay');overlay.hidden=true;overlay.classList.remove('pin13-image-result');$('.buzzer-dialog').classList.remove('entry-result-card');$('#dialogTitle').hidden=false;$('#dialogContent').innerHTML='';if(overlay.classList.contains('code-result')){const stage=overlay.parentElement;stage.classList.remove('code-result-open');overlay.classList.remove('code-result');$('.buzzer-dialog').setAttribute('aria-modal','true');document.body.appendChild(overlay);}requestAnimationFrame(fitCode);if(restore&&returnFocus?.isConnected)returnFocus.focus();}
+function clearHighlight(){document.querySelectorAll('[data-note].playing,[data-student-note].playing,.code-playing').forEach(el=>el.classList.remove('playing','code-playing'));}
+function stopAudio(){session++;window.buzzerStudentWork.reset();document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}if(audio&&audio.state==='running')audio.suspend().catch(()=>{});}
+function closeDialog(restore=true){if(restore&&page===5&&dialog==='canon'){step=2;$('#next').disabled=false;}stopAudio();$('#pinDialog').close();dialog=null;const overlay=$('#dialogOverlay');overlay.hidden=true;overlay.classList.remove('pin13-image-result');$('.buzzer-dialog').classList.remove('entry-result-card');$('#dialogTitle').hidden=false;$('#dialogContent').innerHTML='';if(overlay.classList.contains('code-result')){const stage=overlay.parentElement;stage.classList.remove('code-result-open');overlay.classList.remove('code-result');$('.buzzer-dialog').setAttribute('aria-modal','true');document.body.appendChild(overlay);}requestAnimationFrame(fitCode);if(restore&&returnFocus?.isConnected)returnFocus.focus();}
 async function play(notes,repeat=false,kind=dialog,button=null){
- stopAudio();if(button){button.dataset.idleText=button.textContent;button.textContent='■ 정지';button.classList.add('running');button.setAttribute('aria-pressed','true');}
+ stopAudio();if(button){button.dataset.idleText=button.textContent;button.textContent=kind==='triad'||kind==='student'?'■':'■ 정지';button.classList.add('running');button.setAttribute('aria-pressed','true');}
+ if(kind==='student')window.buzzerStudentWork.reset();
  const loop=repeat,speed=kind==='birthday'?1.5:kind==='canon'?canonBPM/60:1,token=session,status=$('.audio-status');
  try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw new Error('AudioContext unavailable');audio??=new Audio();await audio.resume();if(token!==session)return;
  if(audio.state!=='running')throw new Error('Audio suspended');
@@ -271,6 +275,7 @@ async function play(notes,repeat=false,kind=dialog,button=null){
   if(cycle!==lastCycle){cursor=0;previous=-1;lastCycle=cycle;if(kind==='canon')canonFinished();}
   const phase=elapsed-cycle*duration;while(cursor<notes.length-1&&phase>=ends[cursor])cursor++;
   if(cursor!==previous){clearHighlight();if(kind==='canon'&&(previous<0||Math.floor(previous/canonScorePageSize)!==Math.floor(cursor/canonScorePageSize)))if($('.canon-score-view'))$('.canon-score-view').innerHTML=canonScoreSVG(Math.floor(cursor/canonScorePageSize)*canonScorePageSize);$('#dialogContent').querySelector(`[data-note="${cursor}"]`)?.classList.add('playing');
+   if(kind==='student')window.buzzerStudentWork.highlight(cursor);
    if(kind==='triad')$('#triadPage').querySelector(`[data-entry-step="${cursor+5}"]`)?.classList.add('code-playing');
    if(kind==='activity'){activityRoot.querySelector(`.activity-note-${cursor}`)?.classList.add('code-playing');activityRoot.querySelector(`[data-activity-note="${cursor}"]`)?.classList.add('playing');}
    if(kind==='birthday')birthdayRoot.querySelector(`.birthday-note-${cursor}`)?.classList.add('code-playing');
@@ -286,19 +291,20 @@ titles.forEach((title,i)=>{
  b.innerHTML='<span class="sidebar-page-no">'+(i+1)+'</span><span>'+title+'</span>';
  b.addEventListener('click',()=>{closeDialog(false);page=i;step=0;render();});$('#slideSidebarList').appendChild(b);
 });
-document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();return;}closeDialog(false);const kind=b.dataset.directPlay;play(kind==='triad'?triad:kind==='birthday'?birthday:canon,false,kind,b);}));
+document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();return;}closeDialog(false);const kind=b.dataset.directPlay;play(kind==='student'?studentNotes:kind==='triad'?triad:kind==='birthday'?birthday:canon,false,kind,b);}));
 document.querySelectorAll('[data-buzzer-result]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){closeDialog();return;}if(b.dataset.buzzerResult==='canon'){step=1;render();}else{if(b.dataset.buzzerResult==='birthday')step=1;openDialog(b.dataset.buzzerResult);}}));
 $('#pinDialog [data-close-dialog]').addEventListener('click',()=>closeDialog());$('#pinDialog').addEventListener('click',e=>{if(e.target===$('#pinDialog'))closeDialog();});$('#pinDialog').addEventListener('cancel',e=>{e.preventDefault();closeDialog();});
 $('#next').addEventListener('click',()=>move(1));$('#prev').addEventListener('click',()=>move(-1));$('#closeDialog').addEventListener('click',()=>closeDialog());window.lessonUI.bindOutside({key:'buzzer-result',isOpen:()=>!$('#dialogOverlay').hidden,inside:'.buzzer-dialog,[data-buzzer-result],[data-direct-play],[data-dialog],.run-result',close:()=>closeDialog()});
 document.querySelectorAll('[data-dialog]').forEach(b=>b.addEventListener('click',()=>openDialog(b.dataset.dialog)));document.querySelectorAll('.run-result').forEach(b=>b.addEventListener('click',()=>openDialog(page===2?'triad':'birthday')));
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDialog();return;}const tag=(e.target.tagName||'').toLowerCase();if((e.key==='f'||e.key==='F')&&tag!=='input'&&tag!=='textarea'&&!e.target.isContentEditable){e.preventDefault();$('#fullscreenBtn').click();return;}const direction=window.lessonUI.direction(e);if(direction){e.preventDefault();move(direction);}if(e.key==='Tab'&&dialog&&dialog!=='pins'&&dialog!=='triad'&&dialog!=='pin13'&&dialog!=='birthday'&&dialog!=='canon'){const buttons=[...$('.buzzer-dialog').querySelectorAll('button')];const first=buttons[0],last=buttons.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===$('.buzzer-dialog'))){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDialog();return;}const tag=(e.target.tagName||'').toLowerCase();if((e.key==='f'||e.key==='F')&&tag!=='input'&&tag!=='textarea'&&!e.target.isContentEditable){e.preventDefault();$('#fullscreenBtn').click();return;}if(e.target.closest('.student-code-scroll')&&['ArrowUp','ArrowDown','PageUp','PageDown','Home','End'].includes(e.key))return;const direction=window.lessonUI.direction(e);if(direction){e.preventDefault();move(direction);}if(e.key==='Tab'&&dialog&&dialog!=='pins'&&dialog!=='triad'&&dialog!=='pin13'&&dialog!=='birthday'&&dialog!=='canon'){const buttons=[...$('.buzzer-dialog').querySelectorAll('button')];const first=buttons[0],last=buttons.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===$('.buzzer-dialog'))){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
 function syncFullscreen(){const on=!!document.fullscreenElement;$('#fullscreenBtn').textContent=on?'×':'⛶';$('#fullscreenBtn').setAttribute('aria-label',on?'전체화면 종료':'전체화면으로 보기');$('#fullscreenBtn').setAttribute('aria-pressed',String(on));window.lessonCircuit.refresh();}
 $('#fullscreenBtn').addEventListener('click',()=>{if(document.fullscreenElement)document.exitFullscreen?.();else document.documentElement.requestFullscreen?.();});document.addEventListener('fullscreenchange',syncFullscreen);syncFullscreen();
 window.addEventListener('resize',fitCode);document.addEventListener('fullscreenchange',fitCode);
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopAudio();});window.addEventListener('pagehide',stopAudio);
 // Read-only state for direct lesson verification, without affecting the LED controller.
-window.buzzerLesson={getState:()=>({page:page+1,step,dialog,playing:!!voice}),canon:canon.map(n=>n.slice()),birthday:birthday.map(n=>n.slice()),triad:triad.map(n=>n.slice()),activity:activityNotes.map(n=>n.slice())};window.addEventListener("load",()=>{window.hardwareConnect.open=()=>{closeDialog(false);window.hardwareConnect.before(1,2,n=>{page=n;step=n===1?limits[1]:0;render();});};render();});render();
+window.buzzerLesson={getState:()=>({page:page+1,step,dialog,playing:!!voice}),canon:canon.map(n=>n.slice()),birthday:birthday.map(n=>n.slice()),triad:triad.map(n=>n.slice()),student:studentNotes.map(n=>n.slice()),activity:activityNotes.map(n=>n.slice())};window.addEventListener("load",()=>{window.hardwareConnect.open=()=>{closeDialog(false);window.hardwareConnect.before(1,2,n=>{page=n;step=n===1?limits[1]:0;render();});};render();});render();
 })();
+
 
 
 
