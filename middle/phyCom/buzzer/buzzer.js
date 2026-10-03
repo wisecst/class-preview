@@ -87,7 +87,7 @@ function renderActivity(){
 }
 const studentRoot=$('#studentWorkPage');
 const studentNotes=window.buzzerStudentWork.notes;
-window.buzzerStudentWork.init(studentRoot);
+window.buzzerStudentWork.init(studentRoot,{start,noteBlock});
 let canonCompleted=false,canonSaved=false;
 const saveWrap=canonRoot.querySelector('.entry-save-wrap'),saveButton=canonRoot.querySelector('.entry-save-btn'),saveMenu=canonRoot.querySelector('.entry-save-menu'),completeButton=canonRoot.querySelector('.entry-complete-btn');
 function resetCanonFlow(){canonCompleted=false;canonSaved=false;saveButton.disabled=true;completeButton.disabled=true;saveWrap.classList.remove('save-focus');completeButton.classList.remove('complete-focus');saveMenu.classList.remove('show');saveMenu.setAttribute('aria-hidden','true');canonRoot.querySelector('.canon-progress').textContent='캐논을 마지막 음까지 연주하면 저장할 수 있어요.';}

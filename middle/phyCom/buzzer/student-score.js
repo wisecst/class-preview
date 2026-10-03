@@ -46,9 +46,11 @@
  }
  let root,first=0;
  function renderScore(){root.querySelector('.student-score-view').innerHTML=score(first);root.querySelector('.student-score-range').textContent=`${first+1}–${Math.min(first+pageSize,notes.length)} / ${notes.length}음`;root.querySelector('[data-student-score-prev]').disabled=first===0;root.querySelector('[data-student-score-next]').disabled=first+pageSize>=notes.length;}
- function init(el){
+ function init(el,{start,noteBlock}){
   root=el;
-  root.innerHTML='<div class="student-work"><div class="student-heading"><div><h2>학생 예시 작품</h2><p>악보 ↔ 엔트리 코드 ↔ 실제 연주</p></div><button type="button" class="birthday-run student-run" data-direct-play="student" aria-label="학생 작품 재생" aria-pressed="false">▶</button></div><section class="student-score-card"><div class="student-score-tools"><b>이번 악보 기준: 4분음표 = 1초</b><div><button type="button" data-student-score-prev aria-label="이전 악보 구간">‹</button><strong class="student-score-range"></strong><button type="button" data-student-score-next aria-label="다음 악보 구간">›</button></div></div><div class="student-score-view"></div></section><section class="student-code-card"><div class="student-code-heading"><b>학생 작품 원본 코드</b><span class="student-current">44음 · 쉼·반복 없음 · 한 번 연주</span></div><div class="student-code-scroll" tabindex="0" role="region" aria-label="학생 원본 코드, 위아래로 스크롤"><div class="student-code-image"><img src="../assets/student-entry-code.png" width="340" height="704" alt="학생이 만든 엔트리 원본 코드: 시작 버튼 다음 44개 피에조 부저 음 블록"><span class="student-code-highlight" hidden aria-hidden="true"></span></div></div></section></div>';
+  root.innerHTML='<div class="student-work"><div class="student-heading"><div><h2>학생 예시 작품</h2><p>악보 ↔ 엔트리 코드 ↔ 실제 연주</p></div><button type="button" class="birthday-run student-run" data-direct-play="student" aria-label="학생 작품 재생" aria-pressed="false">▶</button></div><section class="student-score-card"><div class="student-score-tools"><b>이번 악보 기준: 4분음표 = 1초</b><div><button type="button" data-student-score-prev aria-label="이전 악보 구간">‹</button><strong class="student-score-range"></strong><button type="button" data-student-score-next aria-label="다음 악보 구간">›</button></div></div><div class="student-score-view"></div></section><section class="student-code-card"><div class="student-code-heading"><b>학생 작품 원본 코드</b><span class="student-current">44음 · 쉼·반복 없음 · 한 번 연주</span></div><div class="student-code-scroll" tabindex="0" role="region" aria-label="학생 원본 코드, 위아래로 스크롤"><div class="student-code-program"></div></div></section></div>';
+  // Original image: one start block followed by 44 hardware blocks.
+  root.querySelector('.student-code-program').innerHTML=start(false)+notes.map((n,i)=>noteBlock([n[0]==='파#'?'파#(솔♭)':n[0],n[1],n[2],n[3]]).replace('<div class="entry-block hardware-block">',`<div class="entry-block hardware-block entry-show student-code-note" data-student-code="${i}">`)).join('');
   root.querySelector('[data-student-score-prev]').addEventListener('click',()=>{first=Math.max(0,first-pageSize);renderScore();});
   root.querySelector('[data-student-score-next]').addEventListener('click',()=>{first=Math.min(40,first+pageSize);renderScore();});
   renderScore();
@@ -58,13 +60,13 @@
   if(first!==nextFirst){first=nextFirst;renderScore();}
   root.querySelectorAll('.student-note.playing').forEach(el=>el.classList.remove('playing'));
   root.querySelector(`[data-student-note="${index}"]`)?.classList.add('playing');
-  const marker=root.querySelector('.student-code-highlight'),viewer=root.querySelector('.student-code-scroll'),image=root.querySelector('.student-code-image');
-  // Original image: first hardware row begins at y=22, pitch block spacing=15px.
-  marker.style.top=((22+index*15)/704*100)+'%';marker.hidden=false;
-  const scale=image.clientWidth/340,top=(22+index*15)*scale,height=15*scale;
+  root.querySelectorAll('.student-code-note.code-playing').forEach(el=>el.classList.remove('code-playing'));
+  const active=root.querySelector(`[data-student-code="${index}"]`),viewer=root.querySelector('.student-code-scroll');
+  active.classList.add('code-playing');
+  const top=active.offsetTop,height=active.offsetHeight;
   if(top<viewer.scrollTop||top+height>viewer.scrollTop+viewer.clientHeight)viewer.scrollTop=Math.max(0,top-viewer.clientHeight*.35);
   const n=notes[index];root.querySelector('.student-current').textContent=`${index+1} / 44 · ${n[0]}${n[1]} · ${n[2]}초`;
  }
- function reset(){if(!root)return;first=0;renderScore();root.querySelector('.student-code-highlight').hidden=true;root.querySelector('.student-code-scroll').scrollTop=0;root.querySelector('.student-current').textContent='44음 · 쉼·반복 없음 · 한 번 연주';}
+ function reset(){if(!root)return;first=0;renderScore();root.querySelectorAll('.student-code-note.code-playing').forEach(el=>el.classList.remove('code-playing'));root.querySelector('.student-code-scroll').scrollTop=0;root.querySelector('.student-current').textContent='44음 · 쉼·반복 없음 · 한 번 연주';}
  window.buzzerStudentWork={notes,init,highlight,reset};
 })();
