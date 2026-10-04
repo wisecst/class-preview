@@ -273,9 +273,10 @@ function openDialog(kind){if(dialog)closeDialog(false);returnFocus=document.acti
  $('.buzzer-dialog').focus();
 }
 function clearHighlight(){document.querySelectorAll('[data-note].playing,[data-student-note].playing,.code-playing').forEach(el=>el.classList.remove('playing','code-playing'));}
-function stopAudio(){session++;window.buzzerStudentWork.reset();document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}}
+function stopAudio(){window.buzzerAudioDiagnostic?.log('LESSON STOP: session='+session+' '+new Error().stack);session++;window.buzzerStudentWork.reset();document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}}
 function closeDialog(restore=true){if(restore&&page===5&&dialog==='canon'){step=2;$('#next').disabled=false;}stopAudio();$('#pinDialog').close();dialog=null;const overlay=$('#dialogOverlay');overlay.hidden=true;overlay.classList.remove('pin13-image-result');$('.buzzer-dialog').classList.remove('entry-result-card');$('#dialogTitle').hidden=false;$('#dialogContent').innerHTML='';if(overlay.classList.contains('code-result')){const stage=overlay.parentElement;stage.classList.remove('code-result-open');overlay.classList.remove('code-result');$('.buzzer-dialog').setAttribute('aria-modal','true');document.body.appendChild(overlay);}requestAnimationFrame(fitCode);if(restore&&returnFocus?.isConnected)returnFocus.focus();}
 async function play(notes,repeat=false,kind=dialog,button=null){
+ window.buzzerAudioDiagnostic?.log('LESSON PLAY: kind='+kind+' repeat='+repeat);
  stopAudio();if(button){button.dataset.idleText=button.textContent;button.textContent=kind==='triad'||kind==='student'?'■':'■ 정지';button.classList.add('running');button.setAttribute('aria-pressed','true');}
  if(kind==='student')window.buzzerStudentWork.reset();
  const loop=repeat,speed=kind==='birthday'?1.5:kind==='canon'?canonBPM/60:1,token=session,status=$('.audio-status');
@@ -307,7 +308,7 @@ async function play(notes,repeat=false,kind=dialog,button=null){
    if(status)status.textContent=notes[cursor][3]===null?'쉼표':notes[cursor][0];previous=cursor;
   }frame=requestAnimationFrame(tick);
  }frame=requestAnimationFrame(tick);
- }catch(error){if(token===session){stopAudio();if(status)status.textContent='코드의 재생 버튼으로 다시 시작하세요.';}}
+ }catch(error){window.buzzerAudioDiagnostic?.log('LESSON ERROR: '+error.name+': '+error.message+' '+error.stack);if(token===session){stopAudio();if(status)status.textContent='코드의 재생 버튼으로 다시 시작하세요.';}}
 }
 // Same sidebar DOM, item structure and fullscreen visibility as the LED lesson.
 titles.forEach((title,i)=>{
