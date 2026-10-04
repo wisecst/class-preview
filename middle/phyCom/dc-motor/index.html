@@ -1,8 +1,87 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>DC모터 - 중학교 피지컬 컴퓨팅</title><link rel="stylesheet" href="../common/css/slides.css?v=41"><link rel="stylesheet" href="../common/css/motor-lesson.css?v=6"><link rel="stylesheet" href="../common/css/hardware-connect.css?v=6"></head>
+<style>
+/* DC-motor-only principle popup. It is intentionally isolated from shared motor/servo code. */
+.dc-principle-trigger{display:inline-flex;align-items:center;margin-left:.45em;padding:.2em .65em;border:0;border-radius:999px;background:#ffd45a;color:#173d52;font:inherit;font-weight:900;line-height:1.25;cursor:pointer;box-shadow:0 2px 0 #d29e19}
+.dc-principle-trigger:focus-visible,.dc-principle-close:focus-visible{outline:4px solid #2c8ac0;outline-offset:3px}
+.dc-principle-overlay{position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:2.5vh 2.5vw;background:#123b50e8}
+.dc-principle-overlay[hidden]{display:none!important}
+.dc-principle-dialog{position:relative;width:min(1180px,94vw);max-height:94vh;overflow:auto;box-sizing:border-box;padding:clamp(18px,2.2vw,34px) clamp(20px,3vw,46px) clamp(16px,2vw,30px);border:4px solid #b9d8e7;border-radius:24px;background:#fff;text-align:center;box-shadow:0 20px 70px #071c28aa}
+.dc-principle-dialog h2{margin:0 2.2em .45em;color:#174e6d;font-size:clamp(24px,3vw,46px);line-height:1.15}
+.dc-principle-close{position:absolute;right:1.3%;top:1.8%;width:clamp(36px,4vw,52px);height:clamp(36px,4vw,52px);border:0;border-radius:50%;background:#dcecf4;color:#174e6d;font-size:clamp(26px,3vw,40px);line-height:1;cursor:pointer}
+.dc-principle-flow{display:flex;align-items:center;justify-content:center;gap:clamp(7px,1.1vw,18px);margin:0 auto clamp(8px,1.2vh,16px);color:#194a64;font-size:clamp(17px,2vw,30px);font-weight:900;white-space:nowrap}
+.dc-principle-flow b{color:#df7d13;font-size:1.35em}
+.dc-principle-flow span:nth-of-type(1){color:#996000}.dc-principle-flow span:nth-of-type(2){color:#a45516}.dc-principle-flow span:nth-of-type(3){color:#167691}.dc-principle-flow span:nth-of-type(4){color:#155d85}
+.dc-principle-visual{width:100%;margin:0 auto;overflow:hidden;border-radius:16px;background:#f5fbfe}
+.dc-principle-stage{display:block;width:100%;height:auto;max-height:48vh}
+.dc-motor-shell{fill:url(#dcMotorBody);stroke:#244e66;stroke-width:8}
+.dc-magnet{stroke-width:5}.dc-n-magnet{fill:#e96b68;stroke:#a62e36}.dc-s-magnet{fill:#6d91dc;stroke:#2e4f9a}
+.dc-magnet-letter{font-size:76px;font-weight:1000;fill:#fff}.dc-magnet-label{font-size:30px;font-weight:900;fill:#244e66}
+.dc-current-wire{fill:none;stroke:#e38b12;stroke-width:10;stroke-linecap:round;stroke-dasharray:16 20;animation:dcCurrentFlow 1s linear infinite}
+.dc-current-wire-bottom{animation-direction:reverse}.dc-current-dot{fill:#ffd15a;stroke:#a7670a;stroke-width:3;animation:dcCurrentDot 1s linear infinite}
+.dc-dot-2{animation-delay:-.33s}.dc-dot-3{animation-delay:-.67s}
+.dc-current-label{font-size:30px;font-weight:900;fill:#996000}.dc-force-arrows path{stroke:#df7d13;stroke-width:8;stroke-linecap:round;animation:dcForcePulse 1.2s ease-in-out infinite}.dc-force-label{font-size:27px;font-weight:900;fill:#a45516}
+.dc-rotor{transform-box:fill-box;transform-origin:50% 50%;animation:dcRotorSpin 2.2s linear infinite}
+.dc-rotor-coil{fill:#f3c34e;stroke:#a96d08;stroke-width:6}.dc-rotor-coil-line{fill:none;stroke:#fff1a5;stroke-width:9;stroke-linecap:round}
+.dc-commutator{fill:#d9892e;stroke:#87500d;stroke-width:5}.dc-rotor-arm{stroke:#e38b12;stroke-width:11;stroke-linecap:round}
+.dc-shaft{fill:#8d9da7;stroke:#4e626d;stroke-width:5}.dc-shaft-mark{fill:#f6c63f}.dc-shaft-end{fill:#6c7e89;stroke:#334b57;stroke-width:5}
+.dc-axis-arrow{stroke:#155d85;stroke-width:9;stroke-linecap:round;animation:dcAxisPulse 1s ease-in-out infinite}.dc-axis-label{font-size:29px;font-weight:900;fill:#155d85}.dc-rotor-label{font-size:30px;font-weight:900;fill:#a96d08}
+@keyframes dcCurrentFlow{to{stroke-dashoffset:-72}}@keyframes dcCurrentDot{0%{transform:translateX(0);opacity:.15}15%{opacity:1}100%{transform:translateX(345px);opacity:.15}}@keyframes dcForcePulse{0%,100%{opacity:.4}50%{opacity:1}}@keyframes dcRotorSpin{to{transform:rotate(360deg)}}@keyframes dcAxisPulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media(max-width:700px){.dc-principle-overlay{padding:1.5vh 1.5vw}.dc-principle-dialog{width:97vw;max-height:96vh;border-width:3px;border-radius:16px;padding:14px 12px 16px}.dc-principle-dialog h2{font-size:clamp(20px,5vw,30px);margin-left:1.6em;margin-right:1.6em}.dc-principle-flow{gap:4px;font-size:clamp(11px,2.7vw,18px)}.dc-principle-stage{max-height:53vh}.dc-principle-key{font-size:clamp(16px,3.5vw,24px)!important;line-height:1.4;margin:.65em 0!important}.dc-principle-note{font-size:clamp(11px,2.5vw,16px)!important;margin:0!important}.dc-principle-trigger{font-size:.9em}.dc-magnet-letter{font-size:72px}}
+@media(prefers-reduced-motion:reduce){.dc-current-wire,.dc-current-dot,.dc-force-arrows path,.dc-rotor,.dc-axis-arrow{animation:none}.dc-rotor{transform:rotate(22deg)}}
+</style>
 <body class="motor-lesson phycom-lesson" data-motor="dc"><button id="fullscreenBtn" class="fullscreen-btn" type="button" aria-label="전체화면으로 보기">⛶</button>
 <aside class="slide-sidebar"><div class="slide-sidebar-title">출력장치 : DC모터</div><nav id="slideSidebarList"></nav></aside>
-<main class="wrap"><header><span class="course-label">중학교 피지컬 컴퓨팅</span><span class="device-label">출력 장치</span><div class="title-row"><h1>DC모터</h1><span class="slide-subtitle" id="slideSubtitle">DC모터 1. 개념설명</span><div class="title-desc">DC 모터(Direct Current Motor)는 직류 전원을 사용하여 전기 에너지를 회전 에너지로 바꾸는 출력 장치입니다.</div></div></header>
+<main class="wrap"><header><span class="course-label">중학교 피지컬 컴퓨팅</span><span class="device-label">출력 장치</span><div class="title-row"><h1>DC모터</h1><span class="slide-subtitle" id="slideSubtitle">DC모터 1. 개념설명</span><div class="title-desc">DC 모터(Direct Current Motor)는 직류 전원을 사용하여 전기 에너지를 회전 에너지로 바꾸는 출력 장치입니다. <button type="button" class="dc-principle-trigger" id="dcPrincipleTrigger" aria-haspopup="dialog" aria-controls="dcPrincipleOverlay">동작 원리 보기</button></div></div></header>
+<div class="dc-principle-overlay" id="dcPrincipleOverlay" hidden>
+  <section class="dc-principle-dialog" role="dialog" aria-modal="true" aria-labelledby="dcPrincipleTitle">
+    <button type="button" class="dc-principle-close" id="dcPrincipleClose" aria-label="동작 원리 닫기">×</button>
+    <h2 id="dcPrincipleTitle">DC모터는 어떻게 계속 회전할까요?</h2>
+    <div class="dc-principle-flow" aria-label="전류가 흐르면 자기력이 발생하고 회전자와 축이 계속 회전합니다.">
+      <span>전류가 흐름</span><b>→</b><span>자기력이 발생</span><b>→</b><span>회전자가 회전</span><b>→</b><span>축이 회전</span>
+    </div>
+    <div class="dc-principle-visual">
+      <svg class="dc-principle-stage" viewBox="0 0 1000 520" role="img" aria-label="N극과 S극 사이에서 전류가 흐르는 회전자가 돌고 연결된 축이 계속 회전하는 DC모터 내부 단순화 그림">
+        <defs>
+          <marker id="dcForceArrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#df7d13"/></marker>
+          <marker id="dcAxisArrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#155d85"/></marker>
+          <linearGradient id="dcMotorBody" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#eef7fb"/><stop offset="1" stop-color="#c9e0eb"/></linearGradient>
+        </defs>
+        <rect class="dc-motor-shell" x="110" y="68" width="730" height="360" rx="70"/>
+        <rect class="dc-magnet dc-n-magnet" x="150" y="145" width="125" height="206" rx="26"/>
+        <text class="dc-magnet-letter" x="212" y="270" text-anchor="middle">N</text>
+        <text class="dc-magnet-label" x="212" y="385" text-anchor="middle">N극</text>
+        <rect class="dc-magnet dc-s-magnet" x="675" y="145" width="125" height="206" rx="26"/>
+        <text class="dc-magnet-letter" x="737" y="270" text-anchor="middle">S</text>
+        <text class="dc-magnet-label" x="737" y="385" text-anchor="middle">S극</text>
+        <path class="dc-current-wire dc-current-wire-top" d="M278 190 H405 Q500 190 595 190 H672"/>
+        <path class="dc-current-wire dc-current-wire-bottom" d="M278 330 H405 Q500 330 595 330 H672"/>
+        <circle class="dc-current-dot dc-dot-1" cx="300" cy="190" r="9"/><circle class="dc-current-dot dc-dot-2" cx="360" cy="190" r="9"/><circle class="dc-current-dot dc-dot-3" cx="640" cy="330" r="9"/>
+        <text class="dc-current-label" x="500" y="153" text-anchor="middle">전류가 흐름</text>
+        <g class="dc-force-arrows">
+          <path d="M385 225 Q350 260 385 295" fill="none" marker-end="url(#dcForceArrow)"/>
+          <path d="M615 295 Q650 260 615 225" fill="none" marker-end="url(#dcForceArrow)"/>
+          <text class="dc-force-label" x="500" y="115" text-anchor="middle">자기력이 회전자를 밀어 돌림</text>
+        </g>
+        <g class="dc-rotor">
+          <rect class="dc-rotor-coil" x="420" y="192" width="160" height="136" rx="26"/>
+          <path class="dc-rotor-coil-line" d="M438 218 Q500 260 562 218 M438 302 Q500 260 562 302"/>
+          <circle class="dc-commutator" cx="500" cy="260" r="24"/>
+          <path class="dc-rotor-arm" d="M500 260 V177"/>
+          <path class="dc-rotor-arm" d="M500 260 V343"/>
+          <rect class="dc-shaft" x="500" y="242" width="310" height="36" rx="18"/>
+          <rect class="dc-shaft-mark" x="750" y="238" width="12" height="44" rx="6"/>
+          <circle class="dc-shaft-end" cx="810" cy="260" r="34"/>
+        </g>
+        <path class="dc-axis-arrow" d="M790 420 A170 170 0 0 0 690 385" fill="none" marker-end="url(#dcAxisArrow)"/>
+        <text class="dc-axis-label" x="760" y="466" text-anchor="middle">축이 계속 회전</text>
+        <text class="dc-rotor-label" x="500" y="505" text-anchor="middle">회전자</text>
+      </svg>
+    </div>
+    <p class="dc-principle-key">전류가 흐르면 회전자를 돌리는 힘이 생기고, 회전자가 돌면서 연결된 축도 계속 회전합니다.</p>
+    <p class="dc-principle-note">실제 모터 내부의 움직임을 이해하기 쉽게 단순화한 모습입니다.</p>
+  </section>
+</div>
 <section class="slide active motor-concept" aria-label="1. 개념설명"><div class="motor-concept-layout"><figure class="motor-module"><button type="button" class="pin-open-button" data-motor-pins aria-haspopup="dialog" aria-label="DC모터 모듈 핀 역할 보기"><img src="../assets/dc_motor.png" alt="DC모터 모듈 · S / V / G"></button><figcaption>DC모터 모듈 · S / V / G · 핀 역할 보기 ⓘ</figcaption></figure><div class="motor-concept-details"><p class="motor-key">빠른 회전 운동이 필요한 곳에 사용합니다.</p><div class="usage-grid"><div class="usage-item motor-use"><img class="motor-use-image" src="../assets/DCmotor_fan.png" alt="선풍기"><strong>선풍기</strong><span>날개를 계속 회전시킴</span></div><div class="usage-item motor-use"><img class="motor-use-image" src="../assets/DCmotor_car_wheel.png" alt="자동차"><strong>자동차</strong><span>바퀴를 회전시켜 움직임</span></div><div class="usage-item motor-use"><img class="motor-use-image" src="../assets/DCmotor_electric_toothbrush.png" alt="전동칫솔"><strong>전동칫솔</strong><span>모터의 회전으로 칫솔 부분을 움직임</span></div><div class="usage-item motor-use"><img class="motor-use-image" src="../assets/DCmotor_conveyor_belt.png" alt="컨베이어 벨트"><strong>컨베이어 벨트</strong><span>롤러를 회전시켜 물건을 이동시킴</span></div></div></div></div></section>
 <section class="slide non-entry-slide" aria-label="2. 회로 연결"><h2 class="header-page-title">2. DC모터 회로 연결</h2><div class="circuit-demo workspace" id="workspace"><div id="module" class="circuit-component module-component"><img class="component-image" src="../assets/dc_motor.png" alt="DC모터 모듈 · S / V / G"><div class="pin-layer"></div></div><div id="board" class="circuit-component board-component"><img class="component-image" src="../assets/OrangeBoard.png" alt="오렌지보드"><div class="pin-layer"></div></div><svg id="wireLayer" xmlns="http://www.w3.org/2000/svg"></svg><div id="wireLabelLayer"></div></div></section>
 <section class="slide entry-slide entry-page4-slide" aria-label="3. 기본 코드 작성"><div class="entry-workspace">
@@ -46,5 +125,28 @@
 document.addEventListener('DOMContentLoaded',()=>{const qs=s=>document.querySelector(s),slides=[...document.querySelectorAll('.slide')].filter(s=>!s.classList.contains('hardware-connect-slide')),p5=qs('.dc-page5-slide'),old=slides.find(s=>s.classList.contains('entry-page4-slide')),next=qs('#next'),prev=qs('#prev'),count=qs('#slides'),menu=qs('#slideSidebarList');menu.querySelectorAll('.dc5-sidebar-item').forEach(x=>x.remove());const menuLabels=['1. 개념설명','2. 모터 연결','3. 하드웨어 연결','4. 회로 연결'];[...menu.children].slice(0,4).forEach((x,i)=>{x.innerHTML='<span class="sidebar-page-no">'+(i+1)+'</span><span>'+menuLabels[i].replace(/^\\d+\\. /,'')+'</span>';});const menu5=document.createElement('button');menu5.type='button';menu5.className='slide-sidebar-item dc5-sidebar-item';menu5.innerHTML='<span class="sidebar-page-no">5</span><span>프로그램 작성</span>';menu.appendChild(menu5);const page5MenuHandler=()=>{page=3;step=1;paint()};menu5.addEventListener('click',page5MenuHandler);const code=[...document.querySelectorAll('#dc5Code [data-step]')],result=qs('#dc5Result'),btn=qs('#dc5Button'),live=qs('#dc5LiveStep'),motor=qs('#dc5LiveMotor'),fan=qs('#dc5Result .motor-motion-fan'),save=qs('.dc5-save'),complete=qs('.dc5-complete');let page=0,step=0,run=false;function paint(){document.body.classList.toggle('after-intro',page>0);document.body.classList.toggle('entry-page',page>=2);next.disabled=false;prev.disabled=page===0;slides.forEach((s,i)=>s.classList.toggle('active',i===page));[...menu.children].forEach((x,i)=>x.classList.toggle('active',i===page+(page>=2?1:0)));menu5.classList.toggle('active',page===3);if(page===3){code.forEach(x=>x.classList.toggle('show',+x.dataset.step<=step));count.textContent='5 / 5';}else count.textContent=window.hardwareConnect.number(page,4);}function close(){run=false;result.hidden=true;fan.classList.remove('running');motor.textContent='정지';save.classList.remove('enabled');complete.classList.remove('enabled');}function execute(){run=true;result.hidden=false;save.classList.add('enabled');complete.classList.add('enabled');update(0);}function update(v){live.textContent=v;btn.querySelector('.dc5-number').textContent=v;motor.textContent=v?'회전 중 · 출력 '+(v*50):'정지 · 출력 0';fan.classList.toggle('running',v>0);}window.hardwareLessonAdapter={resume:n=>{close();page=n;paint()},sync:n=>{close();page=n;paint()}};function forward(){if(page===1&&window.hardwareConnect?.before(1,2,window.hardwareLessonAdapter.resume))return;if(page<2){page++;paint();return}if(page===2){page=3;step=1;paint();return}if(step<code.length){step++;paint();}else if(!run)execute();}function backward(){if(page===2&&window.hardwareConnect?.before(2,1,window.hardwareLessonAdapter.resume))return;if(page===3){if(run){close();paint();return}if(step>1){step--;paint();return}page=2;paint();return}if(page>0){page--;close();paint();}}next.addEventListener('click',e=>{e.stopImmediatePropagation();forward()},true);prev.addEventListener('click',e=>{e.stopImmediatePropagation();backward()},true);btn.addEventListener('click',()=>{if(!run)return;const v=+live.textContent;update(v>=3?0:v+1)});qs('#dc5Close').addEventListener('click',()=>{close();paint()});paint()});
 </script></main>
 <dialog id="pinDialog" class="phycom-pin-window" data-module-name="DC모터" data-module-image="../assets/dc_motor.png" data-signal-label="S" data-signal-type="digital" data-lesson-pin="D3" data-voltage-label="V" data-lesson-voltage="5V" data-ground-label="G" aria-labelledby="pinDialogTitle"></dialog>
-<script src="../common/js/lesson-ui.js?v=1"></script><script src="../common/js/pin-info.js?v=4"></script><script src="../common/js/motor-circuit.js?v=6"></script><script src="../common/js/motor-lesson.js?v=6"></script><script src="../common/js/hardware-connect.js?v=6"></script></body></html>
+<script src="../common/js/lesson-ui.js?v=1"></script><script src="../common/js/pin-info.js?v=4"></script><script src="../common/js/motor-circuit.js?v=6"></script><script src="../common/js/motor-lesson.js?v=6"></script><script src="../common/js/hardware-connect.js?v=6"></script>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+  const overlay=document.getElementById('dcPrincipleOverlay'), trigger=document.getElementById('dcPrincipleTrigger'), closeButton=document.getElementById('dcPrincipleClose'), next=document.getElementById('next'), prev=document.getElementById('prev');
+  if(!overlay||!trigger||!closeButton||!next||!prev)return;
+  let flowStage=0,returnFocus=null;
+  const conceptActive=()=>document.querySelector('.motor-concept.active');
+  function openPrinciple(){returnFocus=document.activeElement;overlay.hidden=false;overlay.setAttribute('aria-hidden','false');flowStage=1;closeButton.focus()}
+  function closePrinciple(markComplete=true){overlay.hidden=true;overlay.setAttribute('aria-hidden','true');if(markComplete)flowStage=2;if(returnFocus?.isConnected)returnFocus.focus()}
+  trigger.addEventListener('click',()=>overlay.hidden?openPrinciple():closePrinciple());
+  closeButton.addEventListener('click',()=>closePrinciple());
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closePrinciple()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden){e.preventDefault();closePrinciple();}});
+  next.addEventListener('click',e=>{
+    if(!conceptActive()||flowStage>=2)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(flowStage===0)openPrinciple();else closePrinciple();
+  },true);
+  prev.addEventListener('click',e=>{
+    if(!overlay.hidden){e.preventDefault();e.stopImmediatePropagation();closePrinciple(false);return}
+  },true);
+  new MutationObserver(()=>{if(conceptActive()&&overlay.hidden)flowStage=0}).observe(document.querySelector('.motor-concept'),{attributes:true,attributeFilter:['class']});
+});
+</script></body></html>
 
