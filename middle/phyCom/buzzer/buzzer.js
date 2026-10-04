@@ -14,6 +14,30 @@ const triad=[['도',4,.5,60],['미',4,.5,64],['솔',4,.5,67]];
 const limits=[4,3,8,2,37,2,0],titles=['1. 개념','2. 회로 연결','3. 도·미·솔 연주하기','4. 생일축하노래 연주하기','5. 악보를 엔트리 코드로 표현하기','6. 캐논 연주하기','7. 학생 예시 작품'];
 const $=s=>document.querySelector(s),pages=[...document.querySelectorAll('[data-page]')];
 let page=0,step=0,dialog=null,returnFocus=null,audio=null,voice=null,gain=null,frame=0,session=0,startedAt=0,duration=0,scheduledCycle=-1;
+function getAudioContext(){
+ const Audio=window.AudioContext||window.webkitAudioContext;
+ if(!Audio)throw new Error('AudioContext unavailable');
+ audio??=new Audio();
+ return audio;
+}
+function unlockAudio(){
+ const context=getAudioContext();
+ if(context.state==='suspended'||context.state==='interrupted')context.resume().catch(()=>{});
+ try{
+  const silent=context.createOscillator(),zero=context.createGain();
+  zero.gain.setValueAtTime(0,context.currentTime);
+  silent.connect(zero);zero.connect(context.destination);
+  silent.start();silent.stop(context.currentTime+.01);
+  silent.onended=()=>{silent.disconnect();zero.disconnect();};
+ }catch{}
+ return context;
+}
+async function ensureAudioReady(){
+ const context=unlockAudio();
+ if(context.state!=='running')await context.resume();
+ if(context.state!=='running')throw new Error('AudioContext suspended');
+ return context;
+}
 const field=v=>`<span class="field">${v}<span class="select-arrow">▼</span></span>`;
 const block=(type,text)=>`<div class="entry-block ${type}">${text}</div>`;
 const start=space=>block('start-block',`<span class="play-dot">${space?'<svg viewBox="0 0 32 24" aria-hidden="true"><rect x="2" y="3" width="28" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 8h3m3 0h3m3 0h3m3 0h2M6 12h3m3 0h3m3 0h3m3 0h2M8 17h16" stroke="currentColor" stroke-width="2"/></svg>':'▶'}</span><b>${space?'스페이스 키를 눌렀을 때':'시작하기 버튼을 클릭했을 때'}</b>`);
@@ -249,13 +273,13 @@ function openDialog(kind){if(dialog)closeDialog(false);returnFocus=document.acti
  $('.buzzer-dialog').focus();
 }
 function clearHighlight(){document.querySelectorAll('[data-note].playing,[data-student-note].playing,.code-playing').forEach(el=>el.classList.remove('playing','code-playing'));}
-function stopAudio(){session++;window.buzzerStudentWork.reset();document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}if(audio&&audio.state==='running')audio.suspend().catch(()=>{});}
+function stopAudio(){session++;window.buzzerStudentWork.reset();document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}}
 function closeDialog(restore=true){if(restore&&page===5&&dialog==='canon'){step=2;$('#next').disabled=false;}stopAudio();$('#pinDialog').close();dialog=null;const overlay=$('#dialogOverlay');overlay.hidden=true;overlay.classList.remove('pin13-image-result');$('.buzzer-dialog').classList.remove('entry-result-card');$('#dialogTitle').hidden=false;$('#dialogContent').innerHTML='';if(overlay.classList.contains('code-result')){const stage=overlay.parentElement;stage.classList.remove('code-result-open');overlay.classList.remove('code-result');$('.buzzer-dialog').setAttribute('aria-modal','true');document.body.appendChild(overlay);}requestAnimationFrame(fitCode);if(restore&&returnFocus?.isConnected)returnFocus.focus();}
 async function play(notes,repeat=false,kind=dialog,button=null){
  stopAudio();if(button){button.dataset.idleText=button.textContent;button.textContent=kind==='triad'||kind==='student'?'■':'■ 정지';button.classList.add('running');button.setAttribute('aria-pressed','true');}
  if(kind==='student')window.buzzerStudentWork.reset();
  const loop=repeat,speed=kind==='birthday'?1.5:kind==='canon'?canonBPM/60:1,token=session,status=$('.audio-status');
- try{const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw new Error('AudioContext unavailable');audio??=new Audio();await audio.resume();if(token!==session)return;
+ try{audio=await ensureAudioReady();if(token!==session)return;
  if(audio.state!=='running')throw new Error('Audio suspended');
  voice=audio.createOscillator();gain=audio.createGain();voice.type='square';voice.connect(gain);gain.connect(audio.destination);
  startedAt=audio.currentTime+.06;const ends=[];duration=0;for(const n of notes){duration+=n[2]/speed;ends.push(duration);}
@@ -291,8 +315,8 @@ titles.forEach((title,i)=>{
  b.innerHTML='<span class="sidebar-page-no">'+(i+1)+'</span><span>'+title+'</span>';
  b.addEventListener('click',()=>{closeDialog(false);page=i;step=0;render();});$('#slideSidebarList').appendChild(b);
 });
-document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();return;}closeDialog(false);const kind=b.dataset.directPlay;play(kind==='student'?studentNotes:kind==='triad'?triad:kind==='birthday'?birthday:canon,false,kind,b);}));
-document.querySelectorAll('[data-buzzer-result]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){closeDialog();return;}if(b.dataset.buzzerResult==='canon'){step=1;render();}else{if(b.dataset.buzzerResult==='birthday')step=1;openDialog(b.dataset.buzzerResult);}}));
+document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();return;}unlockAudio();closeDialog(false);const kind=b.dataset.directPlay;play(kind==='student'?studentNotes:kind==='triad'?triad:kind==='birthday'?birthday:canon,false,kind,b);}));
+document.querySelectorAll('[data-buzzer-result]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){closeDialog();return;}unlockAudio();if(b.dataset.buzzerResult==='canon'){step=1;render();}else{if(b.dataset.buzzerResult==='birthday')step=1;openDialog(b.dataset.buzzerResult);}}));
 $('#pinDialog [data-close-dialog]').addEventListener('click',()=>closeDialog());$('#pinDialog').addEventListener('click',e=>{if(e.target===$('#pinDialog'))closeDialog();});$('#pinDialog').addEventListener('cancel',e=>{e.preventDefault();closeDialog();});
 $('#next').addEventListener('click',()=>move(1));$('#prev').addEventListener('click',()=>move(-1));$('#closeDialog').addEventListener('click',()=>closeDialog());window.lessonUI.bindOutside({key:'buzzer-result',isOpen:()=>!$('#dialogOverlay').hidden,inside:'.buzzer-dialog,[data-buzzer-result],[data-direct-play],[data-dialog],.run-result',close:()=>closeDialog()});
 document.querySelectorAll('[data-dialog]').forEach(b=>b.addEventListener('click',()=>openDialog(b.dataset.dialog)));document.querySelectorAll('.run-result').forEach(b=>b.addEventListener('click',()=>openDialog(page===2?'triad':'birthday')));
