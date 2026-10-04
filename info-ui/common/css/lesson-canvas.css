@@ -1,0 +1,36 @@
+/* One teaching canvas, including its overlays. No mobile reflow of lesson content. */
+html:has(.info-buzzer),body.info-buzzer{width:100%;height:100%;height:100dvh;min-height:0!important;margin:0;padding:0!important;overflow:hidden!important;background:#edf5f1;display:block!important}
+.info-buzzer #lessonCanvas{position:absolute;width:1366px;height:768px;transform-origin:0 0;overflow:hidden;isolation:isolate;container-type:size;background:#f7faf5}
+html body.info-buzzer main.wrap,html body.info-buzzer:has(.hardware-connect-slide.active) main.wrap{position:relative;width:1366px!important;height:768px!important;min-height:0!important;margin:0!important;padding:12px 18px 52px!important;max-width:none;overflow:hidden}
+.info-buzzer .slide-sidebar{display:none!important}
+.info-buzzer #lessonCanvas.menu-open .slide-sidebar{display:block!important;position:absolute;inset:56px auto 58px 14px;width:310px;padding:18px;z-index:300;background:#fffffff5;border:1px solid #c7e9db;border-radius:22px;box-shadow:0 12px 30px #273d492e;overflow:auto}
+.info-buzzer .slide-sidebar-title{font-size:23px}
+.info-buzzer .slide-sidebar-item,.info-buzzer .hc-sidebar-item{font-size:22px;min-height:60px;margin:5px 0;border-radius:14px}
+.info-buzzer #fullscreenBtn{position:absolute;top:12px;right:16px;z-index:310;width:44px;height:44px}
+.info-buzzer .wrap>.slide{left:18px;right:18px;bottom:52px!important}
+.info-buzzer .wrap>.slide:first-of-type.active{top:142px!important}
+.info-buzzer .slide-nav{position:absolute!important;inset:auto auto 6px 50%!important;display:flex;gap:18px;width:auto;transform:translateX(-50%)!important}
+.info-buzzer .slide-nav button{position:static!important;transform:none!important;min-width:64px;width:64px;height:42px;border-radius:22px;background:#fff;color:#278d7b;font-size:34px;line-height:1;border:1px solid #c7e9db;box-shadow:0 3px 10px #365b6510}
+.info-buzzer #slides{bottom:16px!important;font-size:20px;color:#60757d}
+#lessonControls{position:fixed;left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));bottom:max(4px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:8px;z-index:1000;font-size:15px;color:#273d49}
+#lessonControls button{min-height:44px;min-width:52px;padding:8px 14px;border-radius:18px;border:1px solid #b9d8cc;background:#fff;color:#278d7b;font-weight:800;box-shadow:0 2px 8px #365b6515}
+#lessonControls button:disabled{opacity:.4}#touchClose[hidden]{display:none}#touchCount{min-width:45px;text-align:center;font-weight:800}
+#portraitNotice{display:none;position:fixed;inset:0;z-index:2000;place-items:center;padding:32px;text-align:center;background:#f0f8f3;color:#278d7b;font-size:23px;font-weight:800}
+@media(orientation:portrait) and (max-width:700px){#portraitNotice{display:grid}#lessonControls{display:none}}
+/* Native top-layer pin dialog uses the same original 1600x900 popup canvas. */
+.info-buzzer #pinDialog{padding:0!important;border:2px solid #c7e9db!important;border-radius:24px;max-width:94vw!important;max-height:88dvh!important;background:#fff;overflow:hidden;transform:none!important}
+.info-buzzer #pinDialog .slide-nav{position:absolute!important;bottom:2px!important;left:50%!important;z-index:10}
+.info-buzzer #pinDialog .slide-nav button{width:52px;height:44px;font-size:30px}
+html body.info-buzzer .wrap>.slide[data-page="0"].active{position:absolute!important;top:142px!important;bottom:52px!important;left:18px!important;right:18px!important;width:auto!important;height:auto!important;flex:none}
+.info-buzzer .wrap>.slide-nav{visibility:hidden;pointer-events:none}
+.info-buzzer #pinDialog .slide-nav{visibility:visible;pointer-events:auto}
+@media(max-width:1024px){
+ .info-buzzer #lessonCanvas.menu-open .slide-sidebar{width:calc(260px / var(--canvas-scale));max-width:90%;padding:calc(8px / var(--canvas-scale))}
+ .info-buzzer #lessonCanvas.menu-open .slide-sidebar-title{font-size:calc(17px / var(--canvas-scale))}
+ .info-buzzer #lessonCanvas.menu-open .slide-sidebar-item,.info-buzzer #lessonCanvas.menu-open .hc-sidebar-item{min-height:calc(44px / var(--canvas-scale));font-size:calc(15px / var(--canvas-scale));padding:calc(6px / var(--canvas-scale))}
+ .info-buzzer .entry-run-btn::after,.info-buzzer .entry-loop-run-btn::after,.info-buzzer .buzzer-close::after,.info-buzzer .entry-result-close::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:calc(44px / var(--canvas-scale));height:calc(44px / var(--canvas-scale))}
+}
+@media(max-width:1024px) and (min-aspect-ratio:19/10){
+ #lessonControls{left:auto;right:max(8px,env(safe-area-inset-right));top:8px;bottom:8px;width:118px;flex-direction:column;gap:8px}
+ #lessonControls button{width:110px;padding:8px 6px}#touchCount{order:0}
+}
