@@ -5,7 +5,17 @@
  const slides=qa('main.wrap > .slide'),basic=qa('[data-entry-step]'),code=qa('#dc5Code [data-step]');
  const principle=q('#dcPrincipleOverlay'),pins=q('#pinDialog'),pinResult=q('#pin13Modal'),result=q('#motorResult'),final=q('#dc5Result');
  let page=0,intro=0,circuit=0,step4=1,step5=1,pin4=0,pin5=0,motor4=0,final5=0,timer=null,runButton=null,value=0;
- const button=q('#dc5Button');
+ const button=q('#dc5Button'),lastStep5=17;
+ function comparison(left,right){return '<span class="'+(left==='단계'?'dc5-variable':'number-field')+'">'+left+(left==='단계'?'<span class="select-arrow">▼</span> 값':'')+'</span><b>=</b><span class="number-field">'+right+'</span>';}
+ function paintCondition(){
+  const condition=q('[data-condition]'),palette=q('.dc5-condition-palette');
+  q('.dc5-true').hidden=step5>=8;condition.hidden=step5<8;
+  condition.innerHTML=comparison(step5>=10?'단계':'10',step5>=11?'3':'10');
+  condition.classList.toggle('entry-current',step5===8);condition.classList.toggle('condition-inserting',step5===8);
+  condition.querySelector('.dc5-variable')?.classList.toggle('entry-current',step5===10);condition.lastElementChild.classList.toggle('entry-current',step5===11);
+  palette.hidden=page!==3||![7,9].includes(step5);
+  palette.innerHTML=step5===7?'<h3>판단 · 블록 선택</h3><span class="dc5-condition entry-current">'+comparison('10','10')+'</span><p>다음: 참 자리에 끼워 넣기</p>':'<h3>자료 · 블록 선택</h3><span class="dc5-variable entry-current">단계<span class="select-arrow">▼</span> 값</span><p>다음: 왼쪽 10을 단계 값으로 바꾸기</p>';
+ }
  function closeResults(){
   clearTimeout(timer);timer=null;
   [pinResult,result,final].forEach(el=>{el.hidden=true;el.setAttribute('aria-hidden','true')});
@@ -68,11 +78,12 @@
   q('[data-repeat-body]').classList.toggle('repeat-show',step4>=3);q('#runMotor').disabled=step4<basic.length;
   code.forEach(el=>{const n=+el.dataset.step;el.classList.toggle('show',n<=step5);el.classList.toggle('entry-current',n===step5)});
   qa('[data-container-step]').forEach(el=>el.classList.toggle('show',+el.dataset.containerStep<=step5));
-  q('.dc5-true').hidden=step5>=7;q('[data-condition]').hidden=step5<7;
+  paintCondition();
   qa('.dc5-indent').forEach(el=>el.classList.toggle('has-code',!!el.querySelector('.show')));
   q('.dc5-click-script').hidden=step5<5;
   const current=page===2?basic.find(el=>+el.dataset.entryStep===step4):code.find(el=>+el.dataset.step===step5);
-  slides[page]?.querySelectorAll('.entry-tab').forEach(el=>el.classList.toggle('active-tab',el.dataset.tab===(current?.dataset.tab||(step4===1?'start':'hardware'))));
+  const conditionTab=page===3?({7:'judge',8:'judge',9:'data',10:'data',11:'judge'}[step5]):null;
+  slides[page]?.querySelectorAll('.entry-tab').forEach(el=>el.classList.toggle('active-tab',el.dataset.tab===(conditionTab||current?.dataset.tab||(step4===1?'start':'hardware'))));
   q('#prev').disabled=page===0&&intro===0;q('#next').disabled=page===3&&final5===2;
   if(!window.hardwareConnect?.getState().active){
    q('#slides').textContent=window.hardwareConnect?.number(page,slides.length)||(page+1)+' / 5';
@@ -101,7 +112,7 @@
    step5=1;pin5=0;final5=0;showPage(3);return;
   }
   if(step5===2&&pin5===0){showPin();return}
-  if(step5<code.length){step5++;paint();return}
+  if(step5<lastStep5){step5++;paint();return}
   if(final5===0)execute();
  }
  function prev(){

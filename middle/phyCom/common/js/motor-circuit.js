@@ -8,7 +8,7 @@ const moduleDef={pins:servo?[{name:"S",x:.902,y:.490},{name:"V",x:.902,y:.548},{
 const plannedConnections=[{from:"V",to:"5V"},{from:"G",to:"GND2"},{from:"S",to:"D3"}];
 let wires=[],currentConnectionStep=0;
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
-const getDisplayPinName=n=>((!servo&&{S:"IN",V:"VCC",G:"GND"}[n])||(/^GND\d*$/i.test(n)?"GND":n));
+const getDisplayPinName=n=>(/^GND\d*$/i.test(n)?"GND":n);
 const isGroundPin=n=>/^GND\d*$/i.test(n),isPowerPin=n=>/^(VCC|5V|3\.3V)$/i.test(n);
 const workspace=()=>document.getElementById("workspace"),getModuleContainer=()=>document.getElementById("module"),getBoardContainer=()=>document.getElementById("board");
 const BASE_W=724,BASE_H=390;
@@ -40,7 +40,7 @@ function labelPos(w,pts){
  const i=2;
  return{x:(pts[i].x+pts[i+1].x)/2,y:pts[i].y};
 }
-function drawWires(){const w=workspace(),svg=document.getElementById('wireLayer'),ll=document.getElementById('wireLabelLayer');if(!wires.length){svg.innerHTML='';ll.innerHTML='';return;}const oldPaths=[...svg.querySelectorAll('.wire')],oldLabels=[...ll.querySelectorAll('.wire-label')];const board=getBoardContainer(),{x:left,y:top}=componentPosition(board);svg.setAttribute('viewBox',`0 0 ${w.clientWidth} ${w.clientHeight}`);wires.forEach((wire,wi)=>{const pts=buildWirePoints(wire,left,top);let p=oldPaths[wi];if(!p){p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','wire wire-instant');svg.appendChild(p);}p.setAttribute('d',path(pts));p.setAttribute('stroke',wire.color);let l=oldLabels[wi];if(!l){l=document.createElement('div');l.className='wire-label wire-label-instant';ll.appendChild(l);}const e=getWireEnds(wire);l.textContent=servo?getDisplayPinName(e.modulePin.dataset.pin)+' → '+getDisplayPinName(e.boardPin.dataset.pin):getDisplayPinName(e.boardPin.dataset.pin);l.style.backgroundColor=wire.color;l.style.color='#fff';const pos=labelPos(wire,pts);const pad=12*circuitScale();l.style.left=clamp(pos.x,l.offsetWidth/2+pad,w.clientWidth-l.offsetWidth/2-pad)+'px';l.style.top=clamp(pos.y,l.offsetHeight/2+pad,w.clientHeight-l.offsetHeight/2-pad)+'px';});oldPaths.slice(wires.length).forEach(x=>x.remove());oldLabels.slice(wires.length).forEach(x=>x.remove());}
+function drawWires(){const w=workspace(),svg=document.getElementById('wireLayer'),ll=document.getElementById('wireLabelLayer');if(!wires.length){svg.innerHTML='';ll.innerHTML='';return;}const oldPaths=[...svg.querySelectorAll('.wire')],oldLabels=[...ll.querySelectorAll('.wire-label')];const board=getBoardContainer(),{x:left,y:top}=componentPosition(board);svg.setAttribute('viewBox',`0 0 ${w.clientWidth} ${w.clientHeight}`);wires.forEach((wire,wi)=>{const pts=buildWirePoints(wire,left,top);let p=oldPaths[wi];if(!p){p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','wire wire-instant');svg.appendChild(p);}p.setAttribute('d',path(pts));p.setAttribute('stroke',wire.color);let l=oldLabels[wi];if(!l){l=document.createElement('div');l.className='wire-label wire-label-instant';ll.appendChild(l);}const e=getWireEnds(wire);l.textContent=getDisplayPinName(e.modulePin.dataset.pin)+' → '+getDisplayPinName(e.boardPin.dataset.pin);l.style.backgroundColor=wire.color;l.style.color='#fff';const pos=labelPos(wire,pts);const pad=12*circuitScale();l.style.left=clamp(pos.x,l.offsetWidth/2+pad,w.clientWidth-l.offsetWidth/2-pad)+'px';l.style.top=clamp(pos.y,l.offsetHeight/2+pad,w.clientHeight-l.offsetHeight/2-pad)+'px';});oldPaths.slice(wires.length).forEach(x=>x.remove());oldLabels.slice(wires.length).forEach(x=>x.remove());}
 function showConnectionsToStep(step){
  const next=clamp(step,0,plannedConnections.length);
  wires=[];
@@ -55,5 +55,3 @@ function refresh(){if(resizeComponents()){drawPins(getModuleContainer().querySel
 function init(){drawPins(getModuleContainer().querySelector('.pin-layer'),moduleDef,'module');drawPins(getBoardContainer().querySelector('.pin-layer'),boardDef,'board');const imgs=[...document.querySelectorAll('#workspace .component-image')];imgs.forEach(img=>{if(!img.complete||!img.naturalWidth)img.addEventListener('load',refresh,{once:true});});refresh();window.addEventListener('resize',refresh);document.addEventListener('fullscreenchange',()=>requestAnimationFrame(()=>requestAnimationFrame(refresh)));}
 window.lessonCircuit={refresh,next(){showConnectionsToStep(currentConnectionStep+1)},prev(){showConnectionsToStep(currentConnectionStep-1)},setStep(n){showConnectionsToStep(n)},getStep(){return currentConnectionStep}};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
-
-

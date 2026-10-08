@@ -4,7 +4,34 @@
  const q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
  const slides=qa('main.wrap > .slide'),basic=qa('[data-entry-step]'),code=qa('[data-textbook-step]');
  const principle=q('#servoPrincipleOverlay'),pins=q('#pinDialog'),pinResult=q('#pin13Modal'),result=q('#motorResult'),final=q('#servo5Result');
- let page=0,intro=0,circuit=0,step4=1,step5=0,pin4=0,pin5=0,result4=0,result5=0,timer=null,runButton=null,angle=0,direction=1;
+ let page=0,intro=0,circuit=0,step4=1,step5=0,pin4=0,pin5=0,result4=0,result5=0,timer=null,runButton=null,angle=0,direction=1,principleTimer=null;
+ const lastStep5=23;
+ function stopPrinciple(){clearInterval(principleTimer);principleTimer=null;}
+ function startPrinciple(){
+  stopPrinciple();const started=performance.now(),horn=principle.querySelector('.servo-principle-horn');
+  function tick(){
+   const t=((performance.now()-started)/1000)%7,current=t<.8?0:t<2.4?Math.round((t-.8)/1.6*90):90;
+   const phase=t<.8?0:t<2.4?1:t<3.2?2:t<4?3:4;
+   horn.style.transform='rotate('+(current-90)+'deg)';q('#servoPrincipleAngle').textContent=current+'°';
+   const messages=['90° 제어 신호를 보내요.','현재 위치를 확인하며 회전 중이에요.','현재 위치: 90°','현재 90° = 목표 90°','목표 90°에 도착! 멈췄어요.'];
+   const status=q('#servoPrincipleStatus');if(status.textContent!==messages[phase])status.textContent=messages[phase];
+   principle.querySelectorAll('[data-principle-phase]').forEach(el=>el.classList.toggle('active-phase',+el.dataset.principlePhase===phase));
+  }
+  tick();principleTimer=setInterval(tick,80);
+ }
+ function comparison(left,right){const value=v=>'<span class="'+(v==='각도'?'tb-variable':'number-field')+'">'+v+(v==='각도'?'<span class="select-arrow">▼</span> 값':'')+'</span>';return value(left)+'<b>&lt;</b>'+value(right);}
+ function paintConditions(){
+  for(const which of ['up','down']){
+   const up=which==='up',insert=up?7:17,variable=up?9:19,edit=up?10:20,slot=q('[data-servo-condition="'+which+'"]');
+   q('[data-condition-true="'+which+'"]').hidden=step5>=insert;slot.hidden=step5<insert;
+   const left=up?(step5>=variable?'각도':'10'):(step5>=edit?'0':'10'),right=up?(step5>=edit?'180':'10'):(step5>=variable?'각도':'10');
+   slot.innerHTML=comparison(left,right);slot.classList.toggle('entry-current',step5===insert);slot.classList.toggle('condition-inserting',step5===insert);
+   slot.querySelector('.tb-variable')?.classList.toggle('entry-current',step5===variable);
+   (up?slot.lastElementChild:slot.firstElementChild).classList.toggle('entry-current',step5===edit);
+  }
+  const palette=q('.servo-condition-palette'),judge=[6,16].includes(step5);palette.hidden=page!==3||![6,8,16,18].includes(step5);
+  palette.innerHTML=judge?'<h3>판단 · 블록 선택</h3><span class="tb-condition entry-current">'+comparison('10','10')+'</span><p>다음: 참 자리에 끼워 넣기</p>':'<h3>자료 · 블록 선택</h3><span class="tb-variable entry-current">각도<span class="select-arrow">▼</span> 값</span><p>다음: '+(step5===8?'왼쪽':'오른쪽')+' 10을 각도 값으로 바꾸기</p>';
+ }
  function closeResults(){
   clearTimeout(timer);timer=null;
   [pinResult,result,final].forEach(el=>{el.hidden=true;el.setAttribute('aria-hidden','true')});
@@ -12,7 +39,7 @@
   qa('.servo-running').forEach(el=>el.classList.remove('servo-running'));
  }
  function closePopup(){
-  if(!principle.hidden){intro=2;principle.hidden=true;principle.setAttribute('aria-hidden','true')}
+  if(!principle.hidden){intro=2;principle.hidden=true;principle.setAttribute('aria-hidden','true');stopPrinciple()}
   if(pins.open){intro=4;pins.close()}
   if(!pinResult.hidden){if(page===2)pin4=2;else pin5=2}
   if(!result.hidden)result4=2;
@@ -21,6 +48,7 @@
  }
  function showIntro(n){
   intro=n;principle.hidden=n!==1;principle.setAttribute('aria-hidden',String(n!==1));
+  if(n===1)startPrinciple();else stopPrinciple();
   if(n===3){if(!pins.open)pins.showModal()}else if(pins.open)pins.close();
   paint();
  }
@@ -79,9 +107,10 @@
   q('.servo-page5 .entry-scene-tab:not(.servo-scene2)').classList.toggle('active',step5===0);
   q('.servo-scene-hint').hidden=step5>0;q('.servo5-code').hidden=step5===0;
   q('.servo-scene-add').classList.toggle('entry-current',step5===0);
-  q('#servo5Run').disabled=step5<code.length;
+  q('#servo5Run').disabled=step5<lastStep5;paintConditions();
   const current=page===2?basic.find(el=>+el.dataset.entryStep===step4):code.find(el=>+el.dataset.textbookStep===step5);
-  slides[page]?.querySelectorAll('.entry-tab').forEach(el=>el.classList.toggle('active-tab',el.dataset.tab===(current?.dataset.tab||(step4===1?'start':'hardware'))));
+  const conditionTab=page===3?({6:'judge',7:'judge',8:'data',9:'data',10:'judge',16:'judge',17:'judge',18:'data',19:'data',20:'judge'}[step5]):null;
+  slides[page]?.querySelectorAll('.entry-tab').forEach(el=>el.classList.toggle('active-tab',el.dataset.tab===(conditionTab||current?.dataset.tab||(step4===1?'start':'hardware'))));
   q('#prev').disabled=page===0&&intro===0;q('#next').disabled=page===3&&result5===2;
   if(!window.hardwareConnect?.getState().active){
    q('#slides').textContent=window.hardwareConnect?.number(page,slides.length)||(page+1+(page>=2?1:0))+' / 5';
@@ -91,7 +120,7 @@
   requestAnimationFrame(fitCode);
  }
  function showPage(n){
-  closeResults();principle.hidden=true;principle.setAttribute('aria-hidden','true');if(pins.open)pins.close();
+  closeResults();stopPrinciple();principle.hidden=true;principle.setAttribute('aria-hidden','true');if(pins.open)pins.close();
   if(window.hardwareConnect?.before(page,n,showPage))return;
   page=Math.max(0,Math.min(slides.length-1,n));slides.forEach((el,i)=>el.classList.toggle('active',i===page));
   document.body.classList.toggle('after-intro',page>0);document.body.classList.toggle('entry-page',page>=2);
@@ -109,7 +138,7 @@
    step5=0;pin5=0;result5=0;showPage(3);return;
   }
   if(step5===2&&pin5===0){showPin();return}
-  if(step5<code.length){step5++;paint();return}
+  if(step5<lastStep5){step5++;paint();return}
   if(result5===0)runExample();
  }
  function prev(){
@@ -156,6 +185,5 @@
  window.hardwareLessonAdapter={resume:showPage};window.infoMotorController={showPage};
  window.addEventListener('load',()=>{window.hardwareConnect.open=()=>{showPage(1);window.hardwareConnect.before(1,2,showPage)};paint()});
  window.addEventListener('resize',()=>requestAnimationFrame(fitCode));document.addEventListener('fullscreenchange',()=>requestAnimationFrame(fitCode));
- window.addEventListener('pagehide',closeResults);showPage(0);
+ window.addEventListener('pagehide',()=>{closeResults();stopPrinciple()});showPage(0);
 })();
-
