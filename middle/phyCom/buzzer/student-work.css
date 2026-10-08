@@ -1,0 +1,40 @@
+/* Student examples keep the same code and score cards on a shared 16:9 stage. */
+.buzzer-lesson :is(#studentWorkPage,#studentWorkPage2){padding:16px 24px!important;overflow:hidden}
+.buzzer-lesson #studentWorkPage.active{top:12px!important;bottom:42px!important;height:auto!important;padding:16px 24px!important}
+.student-work{display:grid;grid-template-columns:minmax(0,56%) minmax(0,44%);grid-template-rows:auto minmax(0,1fr);gap:14px;height:100%;color:#294e66}
+.student-heading{grid-area:1/1/2/3;min-height:68px}
+.student-heading .student-credit{display:block;margin:8px 0 0;font-size:25px;font-weight:800;color:#294e66}
+.student-heading p{font-size:24px}
+.student-code-card{grid-area:2/1;overflow:hidden}
+.student-score-card{grid-area:2/2;overflow:hidden}
+.student-code-heading{flex-direction:column;align-items:flex-start;font-size:23px}
+.student-current{font-size:20px}
+.student-code-program .entry-block{font-size:19px}
+.student-score-tools{flex-direction:column;align-items:flex-start;font-size:21px}
+#studentWorkPage2 .student2-workspace{height:100%;display:flex;flex-direction:column;background:#eaf3f9}
+#studentWorkPage2 .entry-code-toolbar{position:relative;flex:0 0 56px}
+#studentWorkPage2 .student2-layout{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,56%) minmax(0,44%);gap:14px;padding:14px 0 0}
+.student2-code-scroll,.student2-score-panel{min-width:0;min-height:0;box-sizing:border-box;background:#fff;border:2px solid #cbdce7;border-radius:14px;padding:12px 16px;color:#294e66}
+.student2-code-scroll{overflow:auto;background:#f4fbff}
+.student2-code-main h3,.student2-code-group h3{font-size:24px;margin:8px 0;color:#205f83}
+.student2-code-list{display:flex;flex-direction:column;gap:3px}
+#studentWorkPage2 .entry-block{display:flex!important;opacity:1!important;visibility:visible!important;position:relative!important;transform:none!important;width:max-content!important;font-size:19px;white-space:nowrap;margin:0;color:#fff}
+#studentWorkPage2 .entry-block .field{color:#fff}
+#studentWorkPage2 .entry-block .number-field{color:#173d52}
+.student2-score-panel{display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.student2-student{font-size:25px;font-weight:800}
+.student2-song{font-size:24px!important;font-weight:800;margin:0!important}
+.student2-score{flex:1;min-height:0;width:100%;height:100%;color:#243447}
+.student2-run{align-self:flex-start;margin:0;font-size:24px}
+.student2-meta{font-size:18px!important;margin:0!important}
+.student2-score-note.playing{color:#e55c0c}
+.student2-code-scroll .code-playing{outline:5px solid #ffd400;outline-offset:-3px}
+
+.student2-score-view{flex:1;min-height:0;display:flex;align-items:center}
+.student2-score-view .student2-score{flex:initial;height:auto;max-height:100%}
+.student2-score-panel .student-score-tools button{font-size:28px;border:1px solid #adc4d3;border-radius:8px;background:#f4fbff;color:#294e66;padding:2px 12px}
+/* Compact the fields so full note blocks fit beside the score. */
+:is(#studentWorkPage,#studentWorkPage2) .entry-block{gap:5px;padding:8px 12px 8px 20px}
+:is(#studentWorkPage,#studentWorkPage2) .entry-block .field{padding:5px 8px}
+.student-code-program{zoom:.82}
+.student2-code-main,.student2-code-group{zoom:.9}
