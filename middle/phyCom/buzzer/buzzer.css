@@ -245,3 +245,23 @@ body.buzzer-lesson:has([data-page="0"].active){--buzzer-align:flex-start;--buzze
 .activity-linked h4{font-size:24px;margin:5px 0 0}
 .activity-linked svg{display:block;width:100%;height:90px;color:#243447}
 .activity-linked p{font-size:22px!important;line-height:1.45;margin:0 0 12px}
+
+
+/* Cumulative quarter-note comparison, confined to the final activity. */
+#scoreActivityPage .activity-layout{grid-template-rows:26% minmax(0,1fr)}
+#scoreActivityPage .activity-explanation{grid-template-columns:minmax(0,2.4fr) minmax(0,1fr);gap:14px;padding:10px 16px}
+#scoreActivityPage .duration-row{grid-template-columns:94px 140px minmax(0,1fr) 170px;font-size:22px;gap:8px;margin:0;padding:2px 6px;border-bottom:1px solid #dbe6ec;min-height:51px}
+#scoreActivityPage .duration-variants{display:flex;align-items:center;height:47px}
+#scoreActivityPage .duration-symbol{width:45px;height:47px}
+#scoreActivityPage .duration-equation{white-space:nowrap;font-size:23px}
+#scoreActivityPage .duration-equation strong{color:#b84c00}
+#scoreActivityPage .duration-ratio{font-size:20px;color:#205f83;white-space:nowrap}
+#scoreActivityPage .duration-current{background:#fff2c2;border-radius:7px}
+#scoreActivityPage .activity-explanation h3{font-size:25px;margin-bottom:7px}
+#scoreActivityPage .activity-basis{font-size:26px}
+#scoreActivityPage .activity-linked p{font-size:18px!important;line-height:1.35;margin:5px 0}
+#scoreActivityPage .activity-linked h4{font-size:20px}
+#scoreActivityPage .activity-linked>svg{height:60px}
+#scoreActivityPage .beam-example{display:flex;align-items:center;gap:8px}
+#scoreActivityPage .beam-example b{font-size:18px;width:140px}
+#scoreActivityPage .beam-example svg{width:66px;height:58px}

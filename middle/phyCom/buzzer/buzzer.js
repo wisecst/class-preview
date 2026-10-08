@@ -75,7 +75,7 @@ const activityNotes=[
  ['라',4,0.5,69,{type:'eighth',name:'8분음표'}],
  ['시',4,0.25,71,{type:'16th',name:'16분음표'}]
 ];
-limits[9]=5;
+limits[9]=7;
 const activityRoot=$('#scoreActivityPage');
 activityRoot.innerHTML=$('#triadPage').innerHTML;
 activityRoot.querySelector('.entry-lesson-title').textContent='[피컴] 악보 읽기 · 음표와 쉼표의 시간';
@@ -97,33 +97,35 @@ function activityScoreSVG(){
 }
 const activityTypes=[...new Map(activityNotes.map(n=>[n[4].name,n])).values()];
 function durationBar(seconds){return '<span class="duration-bar" aria-label="'+(seconds/.25)+'칸">'+'<i aria-hidden="true"></i>'.repeat(seconds/.25)+'</span>';}
-function durationSymbol(type,dots=0){
- let svg='<svg class="duration-symbol" viewBox="0 0 76 86" aria-hidden="true">';
- svg+='<ellipse cx="26" cy="63" rx="13" ry="9" transform="rotate(-15 26 63)" fill="'+(type==='half'?'white':'currentColor')+'" stroke="currentColor" stroke-width="3"/><path d="M37 61V12" fill="none" stroke="currentColor" stroke-width="3"/>';
+function durationSymbol(type,dots=0,down=false){
+ const whole=type==='whole',open=whole||type==='half';
+ let shape='<ellipse cx="26" cy="63" rx="13" ry="9" transform="rotate(-15 26 63)" fill="'+(open?'white':'currentColor')+'" stroke="currentColor" stroke-width="3"/>';
+ if(!whole)shape+='<path d="M37 61V12" fill="none" stroke="currentColor" stroke-width="3"/>';
  const flags=type==='16th'?2:type==='eighth'?1:0;
- for(let i=0;i<flags;i++)svg+='<path d="M37 '+(12+i*12)+'q28 10 16 30" fill="none" stroke="currentColor" stroke-width="4"/>';
- if(dots)svg+='<circle cx="53" cy="61" r="4"/>';
- return svg+'</svg>';
+ for(let i=0;i<flags;i++)shape+='<path d="M37 '+(12+i*12)+'q28 10 16 30" fill="none" stroke="currentColor" stroke-width="4"/>';
+ if(down)shape='<g transform="translate(76 86) rotate(180)">'+shape+'</g>';
+ if(dots)shape+='<circle cx="'+(down?69:53)+'" cy="'+(down?23:61)+'" r="4"/>';
+ return '<svg class="duration-symbol" viewBox="0 0 76 86" aria-hidden="true">'+shape+'</svg>';
+}
+function beamedExample(flags,down=false){
+ const body=[22,62].map(x=>'<ellipse cx="'+x+'" cy="65" rx="9" ry="6" fill="currentColor"/><path d="M'+(x+8)+' 64V20" stroke="currentColor" stroke-width="3"/>').join('')+Array.from({length:flags},(_,i)=>'<path d="M30 '+(20+i*10)+'H70" stroke="currentColor" stroke-width="6"/>').join('');
+ return '<svg viewBox="0 0 100 86" aria-hidden="true">'+(down?'<g transform="translate(100 86) rotate(180)">'+body+'</g>':body)+'</svg>';
 }
 function linkedNotesSVG(tied){
  return '<svg viewBox="0 0 290 130" role="img" aria-label="'+(tied?'같은 높이의 음표를 붙임줄로 연결':'다른 높이의 음표를 이음줄로 연결')+'"><path d="M20 40H270M20 55H270M20 70H270M20 85H270M20 100H270" fill="none" stroke="#6d8491"/>'+[65,tied?65:50].map((y,i)=>'<ellipse cx="'+(80+i*130)+'" cy="'+y+'" rx="13" ry="9" fill="currentColor"/><path d="M'+(92+i*130)+' '+y+'V'+(y-40)+'" stroke="currentColor" stroke-width="3"/>').join('')+'<path d="M80 85Q145 120 210 '+(tied?85:70)+'" stroke="currentColor" stroke-width="3" fill="none"/></svg>';
 }
 function linkedNotesGuide(){return '<aside class="activity-linked"><h3>연결된 음표</h3><h4>붙임줄 · 같은 음높이</h4>'+linkedNotesSVG(true)+'<p>한 번만 소리 내고 길이를 합칩니다.<br><b>1초 + 1초 = 2초</b></p><h4>이음줄 · 다른 음높이</h4>'+linkedNotesSVG(false)+'<p>각 음의 길이는 그대로,<br>음을 부드럽게 이어 연주합니다.</p></aside>';}
+const rhythmComparison=[
+ ['4분음표','quarter',0,1],['2분음표','half',0,2],['점4분음표','quarter',1,1.5],
+ ['온음표','whole',0,4],['8분음표','eighth',0,.5],['점8분음표','eighth',1,.75],['16분음표','16th',0,.25]
+];
 function renderActivity(){
- const focus=[[],['4분음표'],['2분음표'],['점8분음표'],['8분음표'],activityTypes.map(n=>n[4].name)][step];
- activityRoot.querySelectorAll('[data-activity-note]').forEach(el=>el.classList.toggle('activity-current',focus.includes(activityNotes[+el.dataset.activityNote][4].name)));
- activityRoot.querySelectorAll('.activity-seconds').forEach(el=>el.setAttribute('visibility',step===5?'visible':'hidden'));
- const basis='<p class="activity-basis">이번 활동의 기준: <b>4분음표 = 1초</b></p>';
- const row=n=>{const seconds=n[2];return '<div class="duration-row">'+durationSymbol(n[4].type,n[4].dots)+'<b>'+n[4].name+'</b>'+durationBar(seconds)+'<strong>'+seconds+'초</strong></div>';};
- const views=[
- '<h3>음표 모양과 연주 시간을 비교해 봅시다.</h3><p>위 악보에서 서로 다른 음표 모양을 찾아보세요.</p>',
- basis+'<h3>4분음표를 1초로 정합니다.</h3>'+row(activityNotes[1]),
- basis+'<h3>2분음표는 4분음표의 2배입니다.</h3>'+row(activityNotes[0])+'<p>1초 × 2 = <b>2초</b></p>',
- basis+'<h3>점8분음표는 4분음표의 3/4입니다.</h3>'+row(activityNotes[2])+'<p>1초 × 0.75 = <b>0.75초</b></p>',
- basis+'<h3>8분음표와 16분음표는 더 짧습니다.</h3>'+row(activityNotes[3])+row(activityNotes[4]),
- basis+'<h3>음표 길이 한눈에 보기</h3>'+activityNotes.map(row).join('')
- ];
- activityRoot.querySelector('.activity-explanation').innerHTML='<div class="activity-duration">'+views[step]+'</div>'+linkedNotesGuide();
+ const visible=rhythmComparison.slice(0,step);
+ activityRoot.querySelectorAll('[data-activity-note]').forEach(el=>el.classList.toggle('activity-current',visible.some(n=>n[0]===activityNotes[+el.dataset.activityNote][4].name)));
+ activityRoot.querySelectorAll('.activity-seconds').forEach((el,i)=>el.setAttribute('visibility',visible.some(n=>n[0]===activityNotes[i][4].name)?'visible':'hidden'));
+ const row=([name,type,dots,seconds],i)=>'<div class="duration-row'+(i===step-1?' duration-current':'')+'"><div class="duration-variants">'+durationSymbol(type,dots)+(type==='whole'?'':durationSymbol(type,dots,true))+'</div><b>'+name+'</b><span class="duration-equation">1초 × '+seconds+' = <strong>'+seconds+'초</strong></span><span class="duration-ratio">'+(seconds===1?'기준':'4분음표의 '+seconds+'배')+'</span></div>';
+ const guide='<aside class="activity-linked"><h3>모양이 달라도 길이는 같아요</h3><p>줄기가 위·아래로 향해도 같은 음표입니다. 점은 원래 길이의 절반을 더합니다.</p><div class="beam-example"><b>8분음표 · 꼬리 1개</b>'+beamedExample(1)+beamedExample(1,true)+'</div><div class="beam-example"><b>16분음표 · 꼬리 2개</b>'+beamedExample(2)+beamedExample(2,true)+'</div><p>꼬리를 묶어도 각 음표의 길이는 그대로입니다.</p><h4>붙임줄 / 이음줄</h4>'+linkedNotesSVG(true)+'<p>붙임줄: 같은 음을 합쳐 연주<br>이음줄: 다른 음을 부드럽게 연결</p></aside>';
+ activityRoot.querySelector('.activity-explanation').innerHTML='<div class="activity-duration"><p class="activity-basis">이번 활동의 기준: <b>4분음표 = 1초</b></p><h3>'+(step===0?'다음 버튼으로 음표 길이를 비교해 봅시다.':step===7?'음표 길이 한눈에 보기':'음표별 길이를 차례로 비교해 봅시다.')+'</h3>'+visible.map(row).join('')+'</div>'+guide;
  activityRoot.querySelectorAll('.entry-tab').forEach(el=>el.classList.toggle('active-tab',el.dataset.tab==='hardware'));
 }
 document.querySelectorAll('img').forEach(img=>{const path=img.getAttribute('src');if(path?.startsWith('../assets/')||path?.includes('/phycom/assets/'))img.src=assetBase+path.split('/').pop();else if(path?.startsWith('./cake-'))img.src=lessonBase+path.slice(2);});
@@ -359,3 +361,4 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)stopAudio()
 // Read-only state for direct lesson verification, without affecting the LED controller.
 window.buzzerLesson={getState:()=>({page:page+1,step,dialog,playing:!!voice}),canon:canon.map(n=>n.slice()),birthday:birthday.map(n=>n.slice()),triad:triad.map(n=>n.slice()),student:studentNotes.map(n=>n.slice()),activity:activityNotes.map(n=>n.slice()),student2:student2Notes.map(n=>n.slice())};window.addEventListener("load",()=>{window.hardwareConnect.open=()=>{closeDialog(false);window.hardwareConnect.before(1,2,n=>{page=n;step=n===1?limits[1]:0;render();});};render();});render();
 })();
+
