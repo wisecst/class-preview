@@ -27,7 +27,7 @@
 .dc5-formula{display:inline-flex;align-items:center;gap:6px;background:#eea521;border-radius:20px;padding:2px 8px}
 .dc5-cblock{display:none;border-left:18px solid #22b8df;width:max-content;padding-bottom:0;border-radius:0 0 14px 0;border-bottom:12px solid #22b8df}
 .dc5-cblock.show{display:block}
-.dc5-cblock>.dc5-block{display:none!important;width:max-content;margin:0!important}
+.dc5-cblock>.dc5-block{margin-left:-18px!important;padding-left:22px;width:calc(100% + 18px);border-radius:0 24px 24px 0}
 .dc5-indent{padding-left:0;min-height:44px}
 .dc5-indent.has-code{min-height:0}.dc5-indent .dc5-block.show{margin-top:-2px!important}
 .dc5-true{background:#5375ee;padding:6px 20px;clip-path:polygon(12% 0,88% 0,100% 50%,88% 100%,12% 100%,0 50%)}
