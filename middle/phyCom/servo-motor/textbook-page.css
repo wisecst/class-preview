@@ -96,7 +96,8 @@ body[data-motor="servo"]:has(#servoPrincipleOverlay:not([hidden])) .slide-nav{z-
 [data-motor="servo"] .motor-module .motor-comparison>div{padding:12px}
 [data-motor="servo"] .motor-module .motor-comparison strong,[data-motor="servo"] .motor-module .motor-comparison b{font-size:22px}
 [data-motor="servo"] .motor-module .motor-comparison p{font-size:18px}
-[data-motor="servo"] .motor-module .pin-open-button{height:auto;flex:1;min-height:0}
+[data-motor="servo"] .motor-module .pin-open-button{height:auto;flex:0 0 auto;min-height:0;aspect-ratio:1536/800;overflow:hidden}
+[data-motor="servo"] .motor-module .pin-open-button img{object-fit:cover}
 [data-motor="servo"] .motor-module figcaption{margin-top:0}
 .servo-principle-target,.servo-principle-status{font-size:25px;font-weight:900;color:#173d52;margin:6px 0}
 .servo-principle-steps .active-phase{background:#fff1bf;outline:3px solid #ffd400}
