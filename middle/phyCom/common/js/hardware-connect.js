@@ -82,7 +82,7 @@
     q("#next").disabled = false;
     q("#slides").textContent = "3 / " + (original.length + 1);
     const subtitle = q("#slideSubtitle") || q("#subtitle");
-    if (subtitle) subtitle.textContent = "3. 하드웨어 연결";
+    if (subtitle) subtitle.textContent = document.body.dataset.motor === "servo" ? "하드웨어 연결" : "3. 하드웨어 연결";
     document
       .querySelectorAll(".slide-sidebar-item")
       .forEach((b) => {
@@ -247,4 +247,5 @@
     }),
   };
 })();
+
 

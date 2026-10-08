@@ -37,7 +37,7 @@
   result4=1;openResult(result,q('#runMotor'));let i=0;
   function tick(){
    const angles=[90,180,90,0],n=[3,5,7,9][i];
-   q('#motorResultText').textContent=angles[i]+'°';q('#motorResult .motor-motion-pointer').style.transform='rotate('+(angles[i]-90)+'deg)';
+   q('#motorResultText').textContent=angles[i]+'°';q('#motorResult .servo-actual-horn').style.transform='rotate('+(angles[i]-90)+'deg)';
    basic.forEach(el=>{el.classList.remove('entry-current');el.classList.toggle('servo-running',+el.dataset.entryStep===n)});
    i=(i+1)%angles.length;timer=setTimeout(tick,500);
   }
@@ -46,8 +46,9 @@
  function updateAngle(n,dir){
   angle=Math.max(0,Math.min(180,n));q('#servo5Angle').textContent=angle+'°';
   final.querySelector('.servo-roulette-arrow').style.transform='rotate('+(angle-90)+'deg)';
-  final.querySelector('.servo-horn').style.transform='rotate('+(angle-90)+'deg)';
+  final.querySelector('.servo-actual-horn').style.transform='rotate('+(angle-90)+'deg)';
   q('#servo5Key').textContent=dir>0?'↑ 위쪽 화살표':'↓ 아래쪽 화살표';
+  final.querySelectorAll('[data-servo-key]').forEach(el=>el.classList.toggle('pressed',el.dataset.servoKey===(dir>0?'up':'down')));
   const script=slides[3].querySelectorAll('.tb-script')[dir>0?1:2];
   slides[3].querySelectorAll('.tb-script').forEach(el=>el.classList.toggle('servo-running',el===script));
  }
@@ -157,3 +158,4 @@
  window.addEventListener('resize',()=>requestAnimationFrame(fitCode));document.addEventListener('fullscreenchange',()=>requestAnimationFrame(fitCode));
  window.addEventListener('pagehide',closeResults);showPage(0);
 })();
+

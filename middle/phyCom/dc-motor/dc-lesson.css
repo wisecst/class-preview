@@ -10,14 +10,14 @@
 .dc-page5-slide .entry-tab.active-tab .entry-tab-image-selected{display:block}
 .dc5-progress{font-size:20px;font-weight:800;color:#31566a;margin:6px 0}
 .dc5-code{width:max-content;padding:0 0 14px 16px;transform-origin:top left}
-.dc5-block{display:none!important;align-items:center;gap:8px;min-height:42px;box-sizing:border-box;padding:5px 12px;border-radius:9px;color:#fff;font-size:20px;font-weight:800;white-space:nowrap;width:max-content;margin:0!important}
+.dc5-block{display:none!important;width:max-content;margin:0!important}
 .dc5-block.show{display:flex!important}
-.dc5-event{background:#12a91c;border-radius:24px}
+
 .dc5-flow{background:#fb0232}
-.dc5-hardware{background:#08a9ad}
+
 .dc5-data{background:#c22db5}
 .dc5-control,.dc5-else{background:#22b8df}
-.dc5-play{font-size:20px;background:#fff;color:#10a51c;border-radius:50%;padding:4px}
+
 .dc5-field{display:inline-flex;align-items:center;gap:5px;background:#07898d;border-radius:15px;padding:3px 10px}
 .dc5-flow .dc5-field{background:#cf0028}
 .dc5-block .entry-run-btn{display:block}
@@ -25,11 +25,11 @@
 .dc5-condition{display:inline-flex;align-items:center;gap:6px;background:#5375ee;border-radius:20px;padding:3px 8px}
 .dc5-variable{display:inline-flex;align-items:center;gap:4px;border-radius:20px;background:#c22db5;color:#fff;padding:3px 9px}
 .dc5-formula{display:inline-flex;align-items:center;gap:6px;background:#eea521;border-radius:20px;padding:2px 8px}
-.dc5-cblock{display:none;border-left:18px solid #22b8df;width:max-content;padding-bottom:12px;border-radius:0 0 14px 0;border-bottom:12px solid #22b8df}
+.dc5-cblock{display:none;border-left:18px solid #22b8df;width:max-content;padding-bottom:0;border-radius:0 0 14px 0;border-bottom:12px solid #22b8df}
 .dc5-cblock.show{display:block}
-.dc5-cblock>.dc5-block{margin-left:-18px!important;padding-left:22px;width:calc(100% + 18px);border-radius:0 24px 24px 0}
-.dc5-indent{padding-left:14px;min-height:46px}
-.dc5-indent.has-code{min-height:0}
+.dc5-cblock>.dc5-block{display:none!important;width:max-content;margin:0!important}
+.dc5-indent{padding-left:0;min-height:44px}
+.dc5-indent.has-code{min-height:0}.dc5-indent .dc5-block.show{margin-top:-2px!important}
 .dc5-true{background:#5375ee;padding:6px 20px;clip-path:polygon(12% 0,88% 0,100% 50%,88% 100%,12% 100%,0 50%)}
 .dc5-true[hidden],.dc5-condition[hidden]{display:none!important}
 .dc5-click-script{margin-top:16px}
@@ -50,3 +50,8 @@ body[data-motor="dc"] .motor-motion-fan.running{animation:dcFanSpin .42s linear 
 .dc-principle-overlay[hidden] .dc-current-wire,.dc-principle-overlay[hidden] .dc-current-dot,.dc-principle-overlay[hidden] .dc-rotor,.dc-principle-overlay[hidden] .dc-axis-arrow{animation-play-state:paused}
 
 .dc5-condition.entry-current{outline:4px solid #ffd400;outline-offset:2px}
+
+
+.dc5-data,.dc5-flow{border-radius:0 29px 29px 0;padding-left:28px}
+.dc5-data:before,.dc5-flow:before{content:"";position:absolute;left:16px;top:-2px;width:20px;height:9px;background:inherit;clip-path:polygon(0 0,100% 0,75% 100%,25% 100%)}
+.dc5-data:after,.dc5-flow:after{content:"";position:absolute;left:16px;bottom:-9px;width:20px;height:10px;background:inherit;clip-path:polygon(25% 0,75% 0,100% 100%,0 100%);z-index:2}
