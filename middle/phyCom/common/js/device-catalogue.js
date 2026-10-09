@@ -4,15 +4,15 @@ window.phycomDevices=Object.freeze([
     "id": "button",
     "name": "버튼",
     "description": "눌러서 신호 보내기",
-    "image": null,
-    "sprite": "display:block;width:120.22727272727272px;height:115px;background-image:url('assets/dashboard-reference.png');background-size:1748px 982.7272727272726px;background-position:-130.6818181818182px -364.8636363636364px"
+    "image": "ButtonR.png",
+    "sprite": null
   },
   {
     "group": "input",
     "id": "rotation",
     "name": "가변저항",
     "description": "다이얼로 입력값 조절하기",
-    "image": "rotation-module.png",
+    "image": "RotationSensor.png",
     "sprite": null
   },
   {
@@ -28,23 +28,23 @@ window.phycomDevices=Object.freeze([
     "id": "light",
     "name": "빛센서",
     "description": "주변의 밝기 감지하기",
-    "image": null,
-    "sprite": "display:block;width:102.54166666666667px;height:115px;background-image:url('assets/dashboard-reference.png');background-size:1602.3333333333335px 900.8333333333334px;background-position:-614.2916666666667px -319.125px"
+    "image": "LightSensor.png",
+    "sprite": null
   },
   {
     "group": "input",
     "id": "joystick",
     "name": "조이스틱",
     "description": "방향을 입력하기",
-    "image": null,
-    "sprite": "display:block;width:115px;height:115px;background-image:url('assets/dashboard-reference.png');background-size:1424.2962962962963px 800.7407407407408px;background-position:-359.48148148148147px -489.81481481481484px"
+    "image": "Joystick.png",
+    "sprite": null
   },
   {
     "group": "output",
     "id": "led",
     "name": "LED",
     "description": "빛으로 표현하기",
-    "image": "LED_WBGY.png",
+    "image": "LED_red.png",
     "sprite": null
   },
   {
@@ -52,7 +52,7 @@ window.phycomDevices=Object.freeze([
     "id": "rgb-led",
     "name": "RGB LED",
     "description": "여러 색의 빛 표현하기",
-    "image": "LED_WBGY.png",
+    "image": "RGB_LED.png",
     "sprite": null
   },
   {
