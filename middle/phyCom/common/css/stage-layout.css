@@ -48,3 +48,5 @@ html[data-lesson-stage] body .hardware-connect-slide .hc-program-shot{width:100%
 html[data-lesson-stage] body .hardware-connect-slide.hc-success-rx .hc-program-shot{height:auto}
 
 html[data-lesson-stage] body .hardware-connect-slide.hc-success-rx .hc-overlay{inset:510px 25px auto auto;width:26%}
+
+html[data-lesson-stage] body .hardware-connect-slide.hc-success-rx .hc-result p{margin-top:8px!important}

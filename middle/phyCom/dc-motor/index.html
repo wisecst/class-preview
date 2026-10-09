@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko"><head><script src="../common/js/stage-fit.js?v=20261009-final-stage"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>DC모터 - 중학교 피지컬 컴퓨팅</title><link rel="stylesheet" href="../common/css/slides.css?v=20261005-stage1"><link rel="stylesheet" href="../common/css/motor-lesson.css?v=20261005-stage1"><link rel="stylesheet" href="../common/css/hardware-connect.css?v=20261005-stage1">
+<html lang="ko"><head><script src="../common/js/stage-fit.js?v=20261009-final-stage2"></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>DC모터 - 중학교 피지컬 컴퓨팅</title><link rel="stylesheet" href="../common/css/slides.css?v=20261005-stage1"><link rel="stylesheet" href="../common/css/motor-lesson.css?v=20261005-stage1"><link rel="stylesheet" href="../common/css/hardware-connect.css?v=20261005-stage1">
 <style>
 /* DC-motor-only principle popup. It is intentionally isolated from shared motor/servo code. */
 .dc-principle-trigger{display:inline-flex;align-items:center;margin-left:.45em;padding:.2em .65em;border:0;border-radius:999px;background:#ffd45a;color:#173d52;font:inherit;font-weight:900;line-height:1.25;cursor:pointer;box-shadow:0 2px 0 #d29e19}
@@ -34,7 +34,7 @@
 .dc-axis-arrow{stroke:#155d85;stroke-width:9;stroke-linecap:round;animation:dcAxisPulse 1s ease-in-out infinite}.dc-axis-label{font-size:29px;font-weight:900;fill:#155d85}.dc-rotor-label{font-size:30px;font-weight:900;fill:#a96d08}
 @keyframes dcCurrentFlow{to{stroke-dashoffset:-72}}@keyframes dcCurrentDot{0%{transform:translateX(0);opacity:.15}15%{opacity:1}100%{transform:translateX(345px);opacity:.15}}@keyframes dcForcePulse{0%,100%{opacity:.4}50%{opacity:1}}@keyframes dcRotorSpin{to{transform:rotate(360deg)}}@keyframes dcAxisPulse{0%,100%{opacity:.45}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.dc-current-wire,.dc-current-dot,.dc-force-arrows path,.dc-rotor,.dc-axis-arrow{animation:none}.dc-rotor{transform:rotate(22deg)}}</style>
-<link rel="stylesheet" href="../common/css/stage-layout.css?v=20261009-final-stage"><link href="./dc-lesson.css?v=20261008-flow1" rel="stylesheet"/></head>
+<link rel="stylesheet" href="../common/css/stage-layout.css?v=20261009-final-stage2"><link href="./dc-lesson.css?v=20261008-flow1" rel="stylesheet"/></head>
 <body class="motor-lesson phycom-lesson" data-motor="dc"><button id="fullscreenBtn" class="fullscreen-btn" type="button" aria-label="전체화면으로 보기">⛶</button>
 <aside class="slide-sidebar"><div class="slide-sidebar-title">출력장치 : DC모터</div><nav id="slideSidebarList"></nav></aside>
 <main class="wrap"><header><span class="course-label">중학교 피지컬 컴퓨팅</span><span class="device-label">출력 장치</span><div class="title-row"><h1>DC모터</h1><span class="slide-subtitle" id="slideSubtitle">DC모터 1. 개념설명</span><div class="title-desc">DC 모터(Direct Current Motor)는 직류 전원을 사용하여 전기 에너지를 회전 에너지로 바꾸는 출력 장치입니다. <button type="button" class="dc-principle-trigger" id="dcPrincipleTrigger" aria-haspopup="dialog" aria-controls="dcPrincipleOverlay">동작 원리 보기</button></div></div></header>
@@ -115,5 +115,5 @@
 </section>
 <div class="slide-nav"><button id="prev" aria-label="이전 슬라이드">‹</button><button id="next" aria-label="다음 슬라이드">›</button></div><div class="count" id="slides">1 / 5</div></main>
 <dialog id="pinDialog" class="phycom-pin-window" data-module-name="DC모터" data-module-image="../assets/dc_motor.png" data-signal-label="S" data-signal-type="digital" data-lesson-pin="D3" data-voltage-label="V" data-lesson-voltage="5V" data-ground-label="G" aria-labelledby="pinDialogTitle"></dialog>
-<script src="../common/js/lesson-ui.js?v=20261009-final-stage"></script><script src="../common/js/pin-info.js?v=20261005-stage1"></script><script src="../common/js/motor-circuit.js?v=20261008-flow1"></script><script src="./dc-lesson.js?v=20261009-final-stage"></script><script src="../common/js/hardware-connect.js?v=20261009-final-stage"></script>
+<script src="../common/js/lesson-ui.js?v=20261009-final-stage2"></script><script src="../common/js/pin-info.js?v=20261005-stage1"></script><script src="../common/js/motor-circuit.js?v=20261008-flow1"></script><script src="./dc-lesson.js?v=20261009-final-stage2"></script><script src="../common/js/hardware-connect.js?v=20261009-final-stage2"></script>
 </body></html>
