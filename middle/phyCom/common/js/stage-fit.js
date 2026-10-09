@@ -60,7 +60,7 @@
  if(!validLesson(lesson))return;
  const geometry=window.phycomStageGeometry,viewport=document.getElementById('phycomViewport');
  const notice=document.getElementById('phycomPortraitNotice');
- let metrics={scale:1},raf=0;
+ let metrics={scale:1},raf=0,presentation=false;
  function fit(){
   const v=window.visualViewport,width=v?.width||innerWidth,height=v?.height||innerHeight;
   const style=getComputedStyle(viewport),safe={};
@@ -75,14 +75,17 @@
  function schedule(){cancelAnimationFrame(raf);raf=requestAnimationFrame(fit)}
  function syncFullscreen(){
   const button=frame.contentDocument?.querySelector('#fullscreenBtn');if(!button)return;
-  const on=!!document.fullscreenElement;
+  const on=!!document.fullscreenElement||presentation;
+  frame.contentDocument.body.classList.toggle("stage-presenter",on);
   button.textContent=on?'×':'⛶';button.setAttribute('aria-pressed',String(on));
   button.setAttribute('aria-label',on?'전체화면 종료':'전체화면으로 보기');button.title=on?'전체화면 종료':'전체화면';
  }
- function toggleFullscreen(){
-  const action=document.fullscreenElement?document.exitFullscreen?.bind(document):document.documentElement.requestFullscreen?.bind(document.documentElement);
-  // Safari's unsupported fullscreen API does not create a second layout.
-  return action?Promise.resolve().then(action).then(()=>{schedule();syncFullscreen()}).catch(()=>{}):Promise.resolve();
+ async function toggleFullscreen(){
+  if(document.fullscreenElement){await document.exitFullscreen();return}
+  if(presentation){presentation=false;schedule();syncFullscreen();return}
+  try{await document.documentElement.requestFullscreen();presentation=false}
+  catch(error){presentation=true}
+  schedule();syncFullscreen();
  }
  function audit(){
   const doc=frame.contentDocument;if(!doc)return {ready:false};

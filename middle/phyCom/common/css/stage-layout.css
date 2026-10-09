@@ -24,3 +24,8 @@ html[data-lesson-stage] body .wrap>#slides{position:absolute;right:20px;bottom:1
 html[data-lesson-stage] body .fullscreen-btn{position:absolute;top:14px;right:14px}
 html[data-lesson-stage] body #mobileOrientationHint,
 html[data-lesson-stage] body .mobile-nav{display:none!important}
+
+/* Presenter removes the sidebar's space within the unchanged logical stage. */
+html[data-lesson-stage] body.stage-presenter .slide-sidebar{display:none!important}
+html[data-lesson-stage] body.stage-presenter main.wrap{left:0;width:1600px}
+html[data-lesson-stage] body.stage-presenter #prev{left:12px}
