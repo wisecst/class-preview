@@ -59,7 +59,7 @@
  const student=params.get('student')==='1';
  const lessonValue=params.get('lesson');
  const lesson=lessonValue?new URL(lessonValue,location.href):null;
- if(lesson&&embedded)lesson.searchParams.set('v',lesson.pathname.includes('/projects/')?'20261009-fan-five2':'20261009-final-stage3');
+ if(lesson&&embedded)lesson.searchParams.set('v',lesson.pathname.includes('/buzzer/')?'20261009-final-ui3':lesson.pathname.includes('/projects/')?'20261009-fan-five2':'20261009-final-stage3');
  if(lesson&&!validLesson(lesson))return;
  let current=lesson?routes.find(m=>lesson.pathname===base.pathname+m.path||lesson.pathname===base.pathname+m.path+'index.html')?.id:null;
  let navigation=null,homeView=null;
@@ -198,3 +198,4 @@
  }
  if(lesson){frame.src=lesson.href;if(!embedded)history.replaceState(history.state,'',lesson.href)}fit();
 })();
+
