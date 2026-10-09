@@ -147,11 +147,17 @@
   new MutationObserver(report).observe(list,{subtree:true,attributes:true,childList:true,characterData:true});report();
   if(student){
    const names={'오정훈':'오OO','이예준':'이OO','백연정':'백OO','정아주':'정OO'};
+   function anonymizeText(value){
+    for(const [name,alias] of Object.entries(names)){
+     value=value.replace(new RegExp('(?:2026학년도\\s*)?(?:수남중\\s*)?1\\d{4}\\s*'+name,'g'),'1학년 '+alias).split(name).join(alias);
+    }
+    return value;
+   }
    function anonymize(root){
     const walker=doc.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
     while(node=walker.nextNode()){
      if(node.parentElement?.closest('script,style'))continue;
-     let value=node.nodeValue;for(const [name,alias] of Object.entries(names))value=value.split(name).join(alias);
+     let value=anonymizeText(node.nodeValue);
      if(value!==node.nodeValue)node.nodeValue=value;
     }
    }
@@ -160,11 +166,11 @@
     for(const record of records){
      if(record.type==='characterData'){
       const node=record.target;if(node.parentElement?.closest('script,style'))continue;
-      let value=node.nodeValue;for(const [name,alias] of Object.entries(names))value=value.split(name).join(alias);
+      let value=anonymizeText(node.nodeValue);
       if(value!==node.nodeValue)node.nodeValue=value;
      }else for(const node of record.addedNodes){
       if(node.nodeType===Node.ELEMENT_NODE)anonymize(node);
-      else if(node.nodeType===Node.TEXT_NODE){let value=node.nodeValue;for(const [name,alias] of Object.entries(names))value=value.split(name).join(alias);if(value!==node.nodeValue)node.nodeValue=value;}
+      else if(node.nodeType===Node.TEXT_NODE){let value=anonymizeText(node.nodeValue);if(value!==node.nodeValue)node.nodeValue=value;}
      }
     }
    }).observe(doc.body,{childList:true,subtree:true,characterData:true});
