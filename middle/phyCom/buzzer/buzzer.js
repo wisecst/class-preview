@@ -10,9 +10,9 @@ const birthday=[
  ['라#(시♭)',4,.75,70],['라#(시♭)',4,.25,70],['라',4,1,69],['파',4,1,65],['솔',4,1,67],['파',4,2,65]
 ];
 // One curated educational melody drives playback, notation and abbreviated code.
-const canon=window.buzzerCanonScore.notes,canonBPM=window.buzzerCanonScore.bpm,canonScorePageSize=8;
+const canon=window.buzzerCanonScore.notes,canonBPM=window.buzzerCanonScore.bpm,canonScorePageSize=24;
 const triad=[['도',4,.5,60],['미',4,.5,64],['솔',4,.5,67]];
-const limits=[4,3,8,2,2,2,2,2,2,5],titles=['1. 개념','2. 회로 연결','3. 도·미·솔 연주하기','4. 생일축하노래 연주하기','5. 캐논 연주하기','6. 학생 예시 작품 1','7. 학생 예시 작품 2','8. 학생 예시 작품 3','9. 학생 예시 작품 4','10. 악보를 엔트리 코드로 표현하기'];
+const limits=[4,3,8,2,2,2,2,2,2,5],titles=['1. 개념','2. 회로 연결','3. 도·미·솔 연주하기','4. 생일축하노래 연주하기','5. 캐논 연주하기','6. 예시 · 언제나 몇 번이라도','7. 예시 · Hedwig’s Theme','8. 예시 · 알라딘 OST','9. 예시 · Summer','10. 악보를 엔트리 코드로 표현하기'];
 const $=s=>document.querySelector(s),pages=[...document.querySelectorAll('[data-page]')];
 let page=0,step=0,dialog=null,returnFocus=null,audio=null,voice=null,gain=null,frame=0,session=0,startedAt=0,duration=0,scheduledCycle=-1;
 function getAudioContext(){
@@ -64,7 +64,7 @@ canonRoot.querySelector('.entry-lesson-title').textContent='[피컴] 수동버�
 canonRoot.querySelector('.entry-object-info').innerHTML='<span class="entrybot-thumb"><img src="'+assetBase+'entrybot.png" alt="엔트리봇"></span><strong>엔트리봇</strong><span class="entry-code-page-label">캐논 · 교육용 주선율 · BPM '+canonBPM+'</span>';
 const canonVisible=canon.map((note,index)=>[note,index]);
 const canonBlock=([note,index])=>(note[3]===null?block('hardware-block',`<b>디지털</b>${field(3)}<b>번 핀의 피에조 부저를</b>${field('무음')}<b>으로</b><span class="number-field">${Number((note[2]*60/canonBPM).toFixed(6))}</span><b>초 연주하기</b>`):noteBlock([note[0],note[1],Number((note[2]*60/canonBPM).toFixed(6)),note[3]])).replace('entry-block hardware-block',`entry-block hardware-block canon-note-${index}`);
-canonRoot.querySelector('.entry-program').innerHTML='<div class="canon-unified-layout"><section class="student-code-card"><h3>메인 실행 코드</h3><div class="student-code-scroll"><div class="canon-code-program">'+shown(start(false)+canonVisible.map(canonBlock).join(''))+'</div></div></section><section class="student-score-card"><h3>캐논 · 파헬벨</h3><div class="canon-score-view">'+canonScoreSVG(0)+'</div><button type="button" class="birthday-run" data-direct-play="canon">실행 결과 ▶</button><p class="canon-progress" aria-live="polite">완성된 코드를 확인한 뒤 다음 버튼으로 실행하세요.</p><a class="canon-source" href="https://sheetmusic.lyco.org.au/Pachelbel%20-%20Canon%20in%20D/" target="_blank" rel="noopener">원곡 악보: LYCO</a></section></div>';
+canonRoot.querySelector('.entry-program').innerHTML='<div class="canon-unified-layout"><section class="student-code-card"><h3>메인 실행 코드</h3><div class="student-code-scroll"><div class="canon-code-program">'+shown(start(false)+canonVisible.map(canonBlock).join(''))+'</div></div></section><section class="student-score-card"><h3>캐논 · 파헬벨</h3><div class="canon-score-view">'+canonScoreSVG(0)+'</div><button type="button" class="birthday-run" data-direct-play="canon">실행 결과 ▶</button><p class="canon-demo-note">※ 수업 시연을 위해 빠르게 재생됩니다.</p><p class="canon-progress" aria-live="polite">완성된 코드를 확인한 뒤 다음 버튼으로 실행하세요.</p><a class="canon-source" href="https://sheetmusic.lyco.org.au/Pachelbel%20-%20Canon%20in%20D/" target="_blank" rel="noopener">원곡 악보: LYCO</a></section></div>';
 // Original Carnegie Hall Recorder Star score: mm.12–15, then the half rest
 // opening m.16. One contiguous source excerpt; pitches and written rhythm intact.
 // Seconds here use this activity's chosen quarter-note duration of 1 second.
@@ -135,6 +135,15 @@ window.buzzerStudentWork.init(studentRoot,{start,noteBlock});
 const studentRoot2=$('#studentWorkPage2'),student2Notes=window.buzzerStudentWork2.notes;
 window.buzzerStudentWork2.init(studentRoot2,{start,noteBlock});
 for(const id of [3,4])window.buzzerStudentImageWorks.init(id,$('#studentWorkPage'+id),{start,noteBlock});
+// Reuse the existing compact Entry button on the controlling block.
+for(const root of [canonRoot,studentRoot,studentRoot2,$('#studentWorkPage3'),$('#studentWorkPage4')]){
+ const button=root.querySelector('[data-direct-play]');
+ const block=root.querySelector('.repeat-block')||root.querySelector('.start-block');
+ if(!button||!block)continue;
+ button.className=block.classList.contains('repeat-block')?'entry-loop-run-btn':'entry-run-btn';
+ button.textContent='▶';button.setAttribute('aria-label','연주 재생 / 정지');button.setAttribute('aria-pressed','false');block.append(button);
+ const title=root.querySelector('.student2-song');if(title){const panel=title.parentElement;panel.prepend(title);}
+}
 let canonCompleted=false,canonSaved=false;
 const saveWrap=canonRoot.querySelector('.entry-save-wrap'),saveButton=canonRoot.querySelector('.entry-save-btn'),saveMenu=canonRoot.querySelector('.entry-save-menu'),completeButton=canonRoot.querySelector('.entry-complete-btn');
 function resetCanonFlow(){canonCompleted=false;canonSaved=false;saveButton.disabled=true;completeButton.disabled=true;saveWrap.classList.remove('save-focus');completeButton.classList.remove('complete-focus');saveMenu.classList.remove('show');saveMenu.setAttribute('aria-hidden','true');canonRoot.querySelector('.canon-progress').textContent='캐논을 마지막 음까지 연주하면 저장할 수 있어요.';}
@@ -170,10 +179,10 @@ function renderCode(birth){if(!birth)renderTriad();requestAnimationFrame(fitCode
 function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===page));document.body.classList.toggle('after-intro',(page>=2));document.body.classList.toggle('entry-page',page>=2);document.querySelectorAll('.slide-sidebar-item').forEach((b,i)=>{b.classList.toggle('active',i===page);if(i===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#subtitle').textContent=titles[page];$('#slides').textContent=window.hardwareConnect?.number(page,pages.length)||`${page+1} / ${pages.length}`;$('#prev').disabled=page===0&&step===0;$('#next').disabled=false;
  if(page===1){window.lessonCircuit.refresh();window.lessonCircuit.setStep(step);$('#circuitGuide').textContent=['VCC → 5V, GND → GND, IN → D3 순서로 연결합니다.','VCC → 5V : 전원 공급','GND → GND : 전원의 −극 연결','IN → D3 : 소리 제어 신호 연결'][step];}
  if(page>=2){if(page===9)renderActivity();else renderCode(page!==2);requestAnimationFrame(fitCode);}
- if(page===4&&step===1)openDialog('canon');
+ if(page===4&&step===1)play(canon,true,'canon',canonRoot.querySelector('[data-direct-play]'));
  if(page===0&&step===1)openDialog('principle');else if(page===0&&step===3)openDialog('pins');else if(page===2&&step===3)openDialog('pin13');else if(page===2&&step===8)openDialog('triad');else if(page===3&&step===1)openDialog('birthday');
- if((page===6||page===7)&&step===1){const id=page===6?4:3;play(window.buzzerStudentImageWorks.works[id].notes,true,'student'+id,pages[page].querySelector('[data-direct-play]'));}
- if((page===5||page===8)&&step===1){const second=page===5;play(second?student2Notes:studentNotes,true,second?'student2':'student',pages[page].querySelector(second?'.student2-run':'.student-run'));}
+ if((page===6||page===7)&&step===1){const id=page===6?4:3;play(window.buzzerStudentImageWorks.works[id].notes,id===4,'student'+id,pages[page].querySelector('[data-direct-play]'));}
+ if((page===5||page===8)&&step===1){const second=page===5;play(second?student2Notes:studentNotes,false,second?'student2':'student',pages[page].querySelector(second?'.student2-run':'.student-run'));}
 }
 function move(direction){
  closeDialog(false);
@@ -213,8 +222,8 @@ function scoreSVG(){const phraseEnds=[6,12,19,25],positions={도:0,레:1,미:2,�
  }return s+'</svg>';}
 function canonScoreSVG(first=0){
  const visible=canon.slice(first,first+canonScorePageSize),letters={도:0,레:1,미:2,파:3,솔:4,라:5,시:6};
- let svg='<svg class="score" viewBox="0 0 1160 480" role="img" aria-label="현재 재생 구간의 캐논 단선율 악보">' ;
- for(let row=0;row<2;row++){
+ let svg='<svg class="score" viewBox="0 0 1160 1380" role="img" aria-label="현재 재생 구간의 캐논 단선율 악보">' ;
+ for(let row=0;row<6;row++){
   const bottom=110+row*230;
   for(let line=0;line<5;line++)svg+=`<path d="M75 ${bottom-line*12} H1125" stroke="#6d8491" stroke-width="1.5" fill="none"/>`;
   svg+=`<g transform="translate(42 ${bottom-12}) scale(.6)" aria-label="높은음자리표"><path d="M2 58 C-22 43 -22 14 0 -5 C23 -25 19 -55 9 -57 C-5 -58 -9 -36 0 -13 C9 10 18 30 9 43 C-1 57 -23 43 -15 29 C-11 21 0 26 -3 34 M0 -5 C-26 -2 -29 27 -7 31 C14 37 27 18 12 6 C1 -3 -13 8 -8 20 M9 -57 L1 58" fill="none" stroke="#243447" stroke-width="4" stroke-linecap="round"/></g>`;
@@ -332,7 +341,7 @@ async function play(notes,repeat=false,kind=dialog,button=null){
   const cycle=loop?Math.floor(elapsed/duration):0;if(loop&&scheduledCycle<cycle+1)schedule(cycle+1);
   if(cycle!==lastCycle){cursor=0;previous=-1;lastCycle=cycle;if(kind==='canon')canonFinished();}
   const phase=elapsed-cycle*duration;while(cursor<notes.length-1&&phase>=ends[cursor])cursor++;
-  if(cursor!==previous){clearHighlight();if(kind==='canon'&&(previous<0||Math.floor(previous/canonScorePageSize)!==Math.floor(cursor/canonScorePageSize)))canonRoot.querySelectorAll('.canon-score-view').forEach(view=>view.innerHTML=canonScoreSVG(Math.floor(cursor/canonScorePageSize)*canonScorePageSize));if(kind==='canon')canonRoot.querySelectorAll(`[data-note="${cursor}"]`).forEach(note=>note.classList.add('playing'));else $('#dialogContent').querySelector(`[data-note="${cursor}"]`)?.classList.add('playing');
+  if(cursor!==previous){clearHighlight();if(kind==='canon'&&(previous<0||Math.floor(previous/canonScorePageSize)!==Math.floor(cursor/canonScorePageSize)))canonRoot.querySelectorAll('.canon-score-view').forEach(view=>view.innerHTML=canonScoreSVG(Math.floor(cursor/canonScorePageSize)*canonScorePageSize));if(kind==='canon')canonRoot.querySelectorAll(`[data-note="${cursor}"]`).forEach(note=>{note.classList.add('playing');scrollPlayingCode(canonRoot.querySelector('.canon-score-view'),note)});else $('#dialogContent').querySelector(`[data-note="${cursor}"]`)?.classList.add('playing');
    if(kind==='student')window.buzzerStudentWork.highlight(cursor);if(kind==='student2')window.buzzerStudentWork2.highlight(cursor);if(kind==='student3'||kind==='student4')window.buzzerStudentImageWorks.highlight(Number(kind.at(-1)),cursor);
    if(kind==='triad')$('#triadPage').querySelector(`[data-entry-step="${cursor+5}"]`)?.classList.add('code-playing');
    if(kind==='activity'){activityRoot.querySelector(`.activity-note-${cursor}`)?.classList.add('code-playing');activityRoot.querySelector(`[data-activity-note="${cursor}"]`)?.classList.add('playing');}
@@ -349,7 +358,7 @@ titles.forEach((title,i)=>{
  b.innerHTML='<span class="sidebar-page-no">'+(i+1)+'</span><span>'+title+'</span>';
  b.addEventListener('click',()=>{closeDialog(false);page=i;step=0;render();});$('#slideSidebarList').appendChild(b);
 });
-document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();if(page>=4&&page<=8)step=2;return;}unlockAudio();closeDialog(false);const kind=b.dataset.directPlay;if(kind==='canon'){step=1;openDialog('canon');return;}if(page>=4&&page<=8)step=1;play(kind==='student'?studentNotes:kind==='student2'?student2Notes:kind==='student3'||kind==='student4'?window.buzzerStudentImageWorks.works[Number(kind.at(-1))].notes:kind==='triad'?triad:kind==='birthday'?birthday:canon,true,kind,b);}));
+document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();if(page>=4&&page<=8)step=2;return;}unlockAudio();closeDialog(false);const kind=b.dataset.directPlay;if(kind==='canon'){step=1;play(canon,true,kind,b);return;}if(page>=4&&page<=8)step=1;play(kind==='student'?studentNotes:kind==='student2'?student2Notes:kind==='student3'||kind==='student4'?window.buzzerStudentImageWorks.works[Number(kind.at(-1))].notes:kind==='triad'?triad:kind==='birthday'?birthday:canon,kind==='canon'||kind==='student4',kind,b);}));
 document.querySelectorAll('[data-buzzer-result]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){closeDialog();return;}unlockAudio();if(b.dataset.buzzerResult==='canon'){step=1;render();}else{if(b.dataset.buzzerResult==='birthday')step=1;openDialog(b.dataset.buzzerResult);}}));
 $('#pinDialog [data-close-dialog]').addEventListener('click',()=>closeDialog());$('#pinDialog').addEventListener('click',e=>{if(e.target===$('#pinDialog'))closeDialog();});$('#pinDialog').addEventListener('cancel',e=>{e.preventDefault();closeDialog();});
 $('#next').addEventListener('click',()=>move(1));$('#prev').addEventListener('click',()=>move(-1));$('#closeDialog').addEventListener('click',()=>closeDialog());window.lessonUI.bindOutside({key:'buzzer-result',isOpen:()=>!$('#dialogOverlay').hidden,inside:'#next,#prev,#touchNext,#touchPrev,.buzzer-dialog,[data-buzzer-result],[data-direct-play],[data-dialog],.run-result',close:()=>closeDialog()});
@@ -362,4 +371,5 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)stopAudio()
 // Read-only state for direct lesson verification, without affecting the LED controller.
 window.buzzerLesson={getState:()=>({page:page+1,step,dialog,playing:!!voice}),canon:canon.map(n=>n.slice()),birthday:birthday.map(n=>n.slice()),triad:triad.map(n=>n.slice()),student:studentNotes.map(n=>n.slice()),activity:activityNotes.map(n=>n.slice()),student2:student2Notes.map(n=>n.slice())};window.addEventListener("load",()=>{window.hardwareConnect.open=()=>{closeDialog(false);window.hardwareConnect.before(1,2,n=>{page=n;step=n===1?limits[1]:0;render();});};render();});render();
 })();
+
 

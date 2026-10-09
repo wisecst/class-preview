@@ -115,3 +115,19 @@
 :is(#studentWorkPage3,#studentWorkPage4) .entry-block .number-field{color:#173d52}
 .student-image-halo{fill:transparent}
 .student-image-score .playing .student-image-halo{fill:#fff2c7}
+
+
+/* Work title first; student credits stay visible without competing with the score. */
+.buzzer-lesson .student2-song{font-size:30px!important;font-weight:800;color:#243447;line-height:1.25!important;margin:0 0 8px!important}
+.buzzer-lesson .student2-student{font-size:12px!important;font-weight:400;color:#89939b;line-height:1.3;margin:2px 0 8px;order:10}
+.student2-score-label,.student2-meta,.student-current,.canon-source{color:#73808a!important}
+.buzzer-lesson .student2-score-label{font-size:17px!important;line-height:1.4!important}
+.student-score-card,.student-image-result{color:#243447}
+#canonPage .canon-score-view{overflow:auto;display:block;scrollbar-width:thin}
+#canonPage .canon-score-view svg{width:100%;height:auto;max-height:none;display:block}
+#canonPage .student-score-card>h3{font-size:30px;color:#243447}
+#canonPage .canon-demo-note{font-size:14px;color:#73808a;margin:0;line-height:1.35}
+#canonPage .canon-progress{font-size:16px;color:#73808a}
+:is(#canonPage,#studentWorkPage,#studentWorkPage2,#studentWorkPage3,#studentWorkPage4) :is(.entry-run-btn,.entry-loop-run-btn){flex-shrink:0;width:30px;height:28px;min-width:30px;padding:0;margin:0 0 0 10px;font-size:18px;line-height:1;align-self:center}
+
+:is(#canonPage,#studentWorkPage,#studentWorkPage2,#studentWorkPage3,#studentWorkPage4) .start-block:has([data-direct-play])>.play-dot{display:none}

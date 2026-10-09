@@ -15,3 +15,25 @@
 .dashboard-hero h1,.curriculum,.robot-message,.dashboard-tabs button,.device-panel>h2,.device-card h3,.assignment-title,.empty-unit h2{font-family:"Jua","Malgun Gothic",sans-serif;font-weight:400}
 .dashboard-robot{background-size:contain;background-position:center;clip-path:none}
 .motor-card-crop svg{width:170px;height:108px;overflow:hidden}
+
+
+/* Tabs join the selected unit introduction; content cards keep their dimensions. */
+.dashboard-hero{padding:0 12px;gap:20px;align-items:center}
+.hero-art{width:150px;align-self:flex-start;padding-top:14px}
+.dashboard-robot{width:150px;height:170px;transform:scaleX(-1)}
+.hero-title{flex:1;min-width:0}.dashboard-hero h1{font-size:48px;letter-spacing:-1px}.title-emphasis{margin:0 23px}
+.dashboard-tabs{margin:0;gap:8px;height:94px;align-self:flex-end;justify-content:flex-end}
+.dashboard-tabs button{min-width:112px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;padding:12px 16px;border-radius:18px 18px 0 0;background:var(--tab-pale);color:#405569;font-size:26px;box-shadow:none}
+[data-unit="understand"]{--tab-pale:#e7f4ec;--tab-active:#cde8d7}
+[data-unit="modules"]{--tab-pale:#e6f0ff;--tab-active:#cbdff7}
+[data-unit="projects"]{--tab-pale:#f0eafa;--tab-active:#dfd1f1}
+[data-unit="ai"]{--tab-pale:#fff0e5;--tab-active:#f6ddc9}
+.dashboard-tabs button[aria-selected="true"]{background:var(--tab-active);color:#29455c;box-shadow:none}
+#dashboard[data-active-unit="understand"]{--unit-colour:#cde8d7}
+#dashboard[data-active-unit="modules"]{--unit-colour:#cbdff7}
+#dashboard[data-active-unit="projects"]{--unit-colour:#dfd1f1}
+#dashboard[data-active-unit="ai"]{--unit-colour:#f6ddc9}
+.unit-description{height:68px;margin:0 0 22px;padding:20px 28px;border-radius:20px 0 20px 20px;background:var(--unit-colour);font-size:23px;text-align:center;color:#405569}
+.device-panel>h2{display:flex;align-items:center;gap:12px;border:0;padding-left:0}
+.role-icon{width:58px;height:38px;fill:none;stroke:var(--panel-accent);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.preparing .card-arrow{opacity:.3}.available .card-arrow{opacity:1}
