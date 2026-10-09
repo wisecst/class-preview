@@ -300,7 +300,7 @@ function openDialog(kind){if(dialog)closeDialog(false);returnFocus=document.acti
   if(kind==='canon')canonCompleted=true;
   content.innerHTML=kind==='triad'?triadScoreSVG():kind==='birthday'?scoreSVG():kind==='activity'?activityScoreSVG():'<div class="canon-score-view">'+canonScoreSVG()+'</div>';
   if(kind==='birthday')content.insertAdjacentHTML('beforeend','<div class="birthday-object"><img src="'+lessonBase+'cake-1.png" alt="생일케이크_1"><strong>생일케이크</strong></div>');
-  play(kind==='triad'?triad:kind==='birthday'?birthday:kind==='activity'?activityNotes:canon,true,kind,pages[page].querySelector(`[data-buzzer-result="${kind}"]`));
+  play(kind==='triad'?triad:kind==='birthday'?birthday:kind==='activity'?activityNotes:canon,true,kind,pages[page].querySelector(`[data-buzzer-result="${kind}"],[data-direct-play="${kind}"]`));
  }
  if(['triad','birthday','canon','activity'].includes(kind)&&(kind!=='triad'||step>=limits[2])){window.lessonUI.completeResult(pages[page]);if(kind==='canon'){canonCompleted=true;completeButton.classList.add('complete-focus');}}
  $('.buzzer-dialog').focus();
@@ -349,7 +349,7 @@ titles.forEach((title,i)=>{
  b.innerHTML='<span class="sidebar-page-no">'+(i+1)+'</span><span>'+title+'</span>';
  b.addEventListener('click',()=>{closeDialog(false);page=i;step=0;render();});$('#slideSidebarList').appendChild(b);
 });
-document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();if(page>=4&&page<=8)step=2;return;}unlockAudio();closeDialog(false);const kind=b.dataset.directPlay;if(page>=4&&page<=8)step=1;play(kind==='student'?studentNotes:kind==='student2'?student2Notes:kind==='student3'||kind==='student4'?window.buzzerStudentImageWorks.works[Number(kind.at(-1))].notes:kind==='triad'?triad:kind==='birthday'?birthday:canon,true,kind,b);}));
+document.querySelectorAll('[data-direct-play]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){stopAudio();if(page>=4&&page<=8)step=2;return;}unlockAudio();closeDialog(false);const kind=b.dataset.directPlay;if(kind==='canon'){step=1;openDialog('canon');return;}if(page>=4&&page<=8)step=1;play(kind==='student'?studentNotes:kind==='student2'?student2Notes:kind==='student3'||kind==='student4'?window.buzzerStudentImageWorks.works[Number(kind.at(-1))].notes:kind==='triad'?triad:kind==='birthday'?birthday:canon,true,kind,b);}));
 document.querySelectorAll('[data-buzzer-result]').forEach(b=>b.addEventListener('click',()=>{if(b.classList.contains('running')){closeDialog();return;}unlockAudio();if(b.dataset.buzzerResult==='canon'){step=1;render();}else{if(b.dataset.buzzerResult==='birthday')step=1;openDialog(b.dataset.buzzerResult);}}));
 $('#pinDialog [data-close-dialog]').addEventListener('click',()=>closeDialog());$('#pinDialog').addEventListener('click',e=>{if(e.target===$('#pinDialog'))closeDialog();});$('#pinDialog').addEventListener('cancel',e=>{e.preventDefault();closeDialog();});
 $('#next').addEventListener('click',()=>move(1));$('#prev').addEventListener('click',()=>move(-1));$('#closeDialog').addEventListener('click',()=>closeDialog());window.lessonUI.bindOutside({key:'buzzer-result',isOpen:()=>!$('#dialogOverlay').hidden,inside:'#next,#prev,#touchNext,#touchPrev,.buzzer-dialog,[data-buzzer-result],[data-direct-play],[data-dialog],.run-result',close:()=>closeDialog()});

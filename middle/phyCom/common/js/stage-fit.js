@@ -154,7 +154,18 @@
     }
    }
    anonymize(doc.body);
-   new MutationObserver(()=>anonymize(doc.body)).observe(doc.body,{childList:true,subtree:true,characterData:true});
+   new MutationObserver(records=>{
+    for(const record of records){
+     if(record.type==='characterData'){
+      const node=record.target;if(node.parentElement?.closest('script,style'))continue;
+      let value=node.nodeValue;for(const [name,alias] of Object.entries(names))value=value.split(name).join(alias);
+      if(value!==node.nodeValue)node.nodeValue=value;
+     }else for(const node of record.addedNodes){
+      if(node.nodeType===Node.ELEMENT_NODE)anonymize(node);
+      else if(node.nodeType===Node.TEXT_NODE){let value=node.nodeValue;for(const [name,alias] of Object.entries(names))value=value.split(name).join(alias);if(value!==node.nodeValue)node.nodeValue=value;}
+     }
+    }
+   }).observe(doc.body,{childList:true,subtree:true,characterData:true});
   }
  });
  window.addEventListener('message',e=>{

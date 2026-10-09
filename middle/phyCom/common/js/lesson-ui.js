@@ -17,7 +17,7 @@
  const actions='.entry-save-btn,.entry-save-item,.entry-complete-btn';
  function syncActions(){
   document.querySelectorAll('.entry-slide').forEach(slide=>{
-   if(!slide.querySelector('.entry-save-btn'))return;
+   if(!slide.querySelector('.entry-save-btn')||!slide.querySelector('.entry-program,.servo5-code,.dc5-code'))return;
    const on=completed.has(slide);
    slide.querySelectorAll(actions).forEach(button=>{
     if(button.disabled===on)button.disabled=!on;
