@@ -6,9 +6,11 @@
   {id:'dc-motor',name:'DC모터',path:'dc-motor/',enabled:true},
   {id:'servo-motor',name:'서보모터',path:'servo-motor/',enabled:true}
  ]);
- function choices(onSelect){
+ const projects=Object.freeze([{id:'rotation-dc-motor',name:'5단계 선풍기',path:'projects/rotation-dc-motor/',enabled:true}]);
+ const lessons=Object.freeze([...modules,...projects]);
+ function choices(onSelect,items=modules){
   const grid=document.createElement('div');grid.className='module-grid';
-  for(const module of modules){const b=document.createElement('button');b.type='button';b.dataset.module=module.id;b.textContent=module.name+(module.enabled?'':' · 준비 중');b.disabled=!module.enabled;b.addEventListener('click',()=>onSelect(module.id));grid.append(b)}
+  for(const module of items){const b=document.createElement('button');b.type='button';b.dataset.module=module.id;b.textContent=module.name+(module.enabled?'':' · 준비 중');b.disabled=!module.enabled;b.addEventListener('click',()=>onSelect(module.id));grid.append(b)}
   return grid;
  }
  function create({home,previous,next,select,fullscreen}){
@@ -24,12 +26,12 @@
   function setOpen(on){panel.hidden=!on;picker.setAttribute('aria-expanded',String(on));if(on)(panel.querySelector('[aria-current]')||panel.querySelector('button:not(:disabled)'))?.focus()}
   document.addEventListener('click',e=>{if(!nav.contains(e.target))setOpen(false)});
   nav.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){e.preventDefault();e.stopPropagation();setOpen(false);picker.focus()}});
-  function update(id,items=[]){const module=modules.find(m=>m.id===id),index=items.findIndex(i=>i.active);position.textContent=module?`${module.name} · ${index<0?'–':index+1} / ${items.length||'–'}`:'';
+  function update(id,items=[]){const module=lessons.find(m=>m.id===id),index=items.findIndex(i=>i.active);position.textContent=module?`${module.name} · ${index<0?'–':index+1} / ${items.length||'–'}`:'';
    for(const b of panel.querySelectorAll('[data-module]')){if(b.dataset.module===id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')}
    // Controllers own step boundaries, including actions within the first/last page.
    prev.disabled=forward.disabled=!module;
   }
   return {element:nav,update,close:()=>setOpen(false)};
  }
- window.phycomNavigation=Object.freeze({modules,choices,create});
+ window.phycomNavigation=Object.freeze({modules,projects,lessons,choices,create});
 })();

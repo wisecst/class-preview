@@ -4,8 +4,8 @@
 (()=>{
  'use strict';
  const scriptURL=new URL(document.currentScript.src),base=new URL('../../',scriptURL);
- const modules=(window.phycomNavigation?.modules||[{id:'led'},{id:'buzzer'},{id:'dc-motor'},{id:'servo-motor'}]).map(m=>m.id);
- const validLesson=url=>url.origin===location.origin&&modules.some(name=>url.pathname===base.pathname+name+'/'||url.pathname===base.pathname+name+'/index.html');
+ const routes=window.phycomNavigation?.lessons||[{id:'led',path:'led/'},{id:'buzzer',path:'buzzer/'},{id:'dc-motor',path:'dc-motor/'},{id:'servo-motor',path:'servo-motor/'}];
+ const validLesson=url=>url.origin===location.origin&&routes.some(m=>url.pathname===base.pathname+m.path||url.pathname===base.pathname+m.path+'index.html');
  const frame=document.getElementById('phycomStage');
  if(!frame){
   const owner=window.frameElement;
@@ -51,7 +51,7 @@
   const lesson=new URL(location.href);
   if(!validLesson(lesson))return;
   document.documentElement.style.visibility='hidden';
-  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-bottom-nav1');
+  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-fan-project1');
   location.replace(host.href);return;
  }
  const params=new URL(location.href).searchParams;
@@ -61,7 +61,7 @@
  const lesson=lessonValue?new URL(lessonValue,location.href):null;
  if(lesson&&embedded)lesson.searchParams.set('v','20261009-final-stage3');
  if(lesson&&!validLesson(lesson))return;
- let current=lesson?modules.find(id=>lesson.pathname===base.pathname+id+'/'||lesson.pathname===base.pathname+id+'/index.html'):null;
+ let current=lesson?routes.find(m=>lesson.pathname===base.pathname+m.path||lesson.pathname===base.pathname+m.path+'index.html')?.id:null;
  let navigation=null,homeView=null;
  const geometry=window.phycomStageGeometry,viewport=document.getElementById('phycomViewport');
  const notice=document.getElementById('phycomPortraitNotice');
@@ -180,14 +180,14 @@
  if(!embedded&&window.phycomNavigation){
   const catalogue=window.phycomNavigation;
   function open(id){if(id===current&&!homeView?.hidden)return;if(id===current&&frame.getAttribute('src')!=='about:blank')return;
-   const module=catalogue.modules.find(m=>m.id===id&&m.enabled);if(!module)return;
+   const module=catalogue.lessons.find(m=>m.id===id&&m.enabled);if(!module)return;
    current=id;homeView.hidden=true;viewport.hidden=false;navigation.element.hidden=false;navigation.close();navigation.update(id);
-   const url=new URL(module.path,base);url.searchParams.set('v','20261009-bottom-nav1');frame.src=url.href;history.replaceState(history.state,'',url.href);schedule();
+   const url=new URL(module.path,base);url.searchParams.set('v','20261009-fan-project1');frame.src=url.href;history.replaceState(history.state,'',url.href);schedule();
   }
   function home(){current=null;frame.src='about:blank';viewport.hidden=true;homeView.hidden=false;navigation.element.hidden=true;navigation.close();document.title='피지컬 컴퓨팅';history.replaceState(history.state,'',new URL('index.html',base).href)}
   navigation=catalogue.create({home,previous:()=>frame.contentDocument?.querySelector('#prev')?.click(),next:()=>frame.contentDocument?.querySelector('#next')?.click(),select:open,fullscreen:toggleFullscreen});
   navigation.element.classList.add('stage-navigation');document.body.append(navigation.element);
-  homeView=document.createElement('main');homeView.className='stage-module-home';const heading=document.createElement('h1');heading.textContent='피지컬 컴퓨팅';homeView.append(heading,catalogue.choices(open));document.body.append(homeView);
+  homeView=document.createElement('main');homeView.className='stage-module-home';const heading=document.createElement('h1');heading.textContent='피지컬 컴퓨팅';const projectHeading=document.createElement('h2');projectHeading.textContent='프로젝트';homeView.append(heading,catalogue.choices(open),projectHeading,catalogue.choices(open,catalogue.projects));document.body.append(homeView);
   homeView.hidden=!!lesson;navigation.element.hidden=!lesson;navigation.update(current);if(!lesson)home();
  }
  if(lesson){frame.src=lesson.href;if(!embedded)history.replaceState(history.state,'',lesson.href)}fit();
