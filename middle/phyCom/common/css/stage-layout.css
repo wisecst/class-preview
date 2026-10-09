@@ -38,11 +38,13 @@ html[data-lesson-stage] body .entry-slide:not(.hardware-connect-slide) .entry-ta
 
 html[data-lesson-stage] body .hardware-connect-slide .hc-usb{display:grid;grid-template-columns:minmax(0,1fr) 220px minmax(0,1fr);gap:24px;align-items:center}
 html[data-lesson-stage] body .hardware-connect-slide .hc-usb>div{width:100%;text-align:center}
-html[data-lesson-stage] body .hardware-connect-slide .hc-usb>div>img{width:360px;height:auto;max-width:100%;object-fit:contain}
-html[data-lesson-stage] body .hardware-connect-slide .hc-usb>div>svg{width:260px;height:210px;max-width:100%}
+html[data-lesson-stage] body .hardware-connect-slide .hc-usb>div>img{width:320px;height:auto;max-width:100%;object-fit:contain}
+html[data-lesson-stage] body .hardware-connect-slide .hc-usb>div>svg{width:320px;height:258px;max-width:100%}
 html[data-lesson-stage] body .hardware-connect-slide .hc-usb>svg{width:220px;height:180px}
 html[data-lesson-stage] body .hardware-connect-slide .hc-content{left:145px;right:25px;top:95px;bottom:30px}
 html[data-lesson-stage] body .hardware-connect-slide .hc-content h2{font-size:30px;line-height:1.3;margin:0 0 16px}
 html[data-lesson-stage] body .hardware-connect-slide .hc-program-window{box-sizing:border-box;width:43%;padding:28px 10px 10px;top:0;right:0}
 html[data-lesson-stage] body .hardware-connect-slide .hc-program-shot{width:100%;height:auto;max-width:100%;object-fit:contain}
-html[data-lesson-stage] body .hardware-connect-slide.hc-success-rx .hc-program-shot{height:75px}
+html[data-lesson-stage] body .hardware-connect-slide.hc-success-rx .hc-program-shot{height:auto}
+
+html[data-lesson-stage] body .hardware-connect-slide.hc-success-rx .hc-overlay{inset:510px 25px auto auto;width:26%}

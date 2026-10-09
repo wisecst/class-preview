@@ -144,7 +144,7 @@
  q('#runMotor').addEventListener('click',()=>result.hidden?runMotor():closePopup());
  button.addEventListener('click',()=>{if(!final.hidden)update(value===3?0:value+1)});
  button.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();button.click()}});
- window.lessonUI.bindOutside({key:'dc-results',isOpen:()=>[pinResult,result,final].some(x=>!x.hidden),inside:'.motor-result,#runPin13,#runMotor,#dc5RunPin13',close:closePopup});
+ window.lessonUI.bindOutside({key:'dc-results',isOpen:()=>[pinResult,result,final].some(x=>!x.hidden),inside:'.motor-result,#runPin13,#runMotor,#dc5RunPin13,#dc5Button',close:closePopup});
  document.addEventListener('keydown',e=>{
   if(/input|textarea|select/i.test(e.target.tagName)||e.target.isContentEditable)return;
   const direction=window.lessonUI.direction(e);
