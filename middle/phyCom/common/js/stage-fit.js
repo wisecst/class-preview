@@ -51,7 +51,7 @@
   const lesson=new URL(location.href);
   if(!validLesson(lesson))return;
   document.documentElement.style.visibility='hidden';
-  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-final-stage2');
+  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-final-stage3');
   location.replace(host.href);return;
  }
  const params=new URL(location.href).searchParams;
@@ -59,7 +59,7 @@
  const student=params.get('student')==='1';
  const lessonValue=params.get('lesson');
  if(!lessonValue)return;
- const lesson=new URL(lessonValue,location.href);if(embedded)lesson.searchParams.set('v','20261009-final-stage2');
+ const lesson=new URL(lessonValue,location.href);if(embedded)lesson.searchParams.set('v','20261009-final-stage3');
  if(!validLesson(lesson))return;
  const geometry=window.phycomStageGeometry,viewport=document.getElementById('phycomViewport');
  const notice=document.getElementById('phycomPortraitNotice');
