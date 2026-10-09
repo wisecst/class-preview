@@ -138,7 +138,7 @@ for(const id of [3,4])window.buzzerStudentImageWorks.init(id,$('#studentWorkPage
 // Reuse the existing compact Entry button on the controlling block.
 for(const root of [birthdayRoot,canonRoot,studentRoot,studentRoot2,$('#studentWorkPage3'),$('#studentWorkPage4')]){
  const button=root.querySelector('[data-direct-play],[data-buzzer-result="birthday"]');
- const block=root.querySelector('.repeat-block')||root.querySelector('.start-block');
+ const block=[...root.querySelectorAll('.repeat-block')].find(e=>e.textContent.includes('계속 반복하기'))||root.querySelector('.start-block');
  if(!button||!block)continue;
  button.className=block.classList.contains('repeat-block')?'entry-loop-run-btn':'entry-run-btn';
  button.textContent='▶';button.setAttribute('aria-label','연주 재생 / 정지');button.setAttribute('aria-pressed','false');block.append(button);
