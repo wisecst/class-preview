@@ -15,8 +15,10 @@
 .project-guide .guide-card p{font-size:28px}.project-guide .output-table{font-size:28px}
 .project-entry .project-map .number-field{background:#ffda53;color:#333;border-color:#d3b54b}
 .project-entry .project-code{padding-bottom:30px}.project-entry .project-palette{margin:22px 0 0;padding:10px 14px;width:max-content;max-width:100%;border:2px dashed #b4bdcb;border-radius:12px;background:#fff}
-.project-entry .project-code .repeat-body.repeat-show{display:block!important;margin-top:0!important;padding-top:0!important;padding-bottom:12px!important;border-left:12px solid #16ae9d;border-bottom:12px solid #16ae9d;border-radius:0 0 0 15px}
+.project-entry .project-code .repeat-body.repeat-show{display:block!important;margin-top:0!important;padding-top:0!important;padding-bottom:12px!important;border-left:12px solid #22b8df;border-bottom:12px solid #22b8df;border-radius:0 0 0 15px}
 .project-entry .project-code .repeat-body>.entry-block{margin-top:0!important;margin-bottom:0!important}
 .project-entry .project-code .repeat-block{margin-bottom:0!important}
 .project-entry .project-code-controls button{width:55px;height:48px;font-size:28px;line-height:1;padding:5px}
 .project-entry #pin13Modal{z-index:50}.project-entry .project-result{z-index:51}
+
+.fan-project [hidden]{display:none!important}
