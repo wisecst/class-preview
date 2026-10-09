@@ -11,3 +11,5 @@
 .lesson-navigation button:is([data-action="previous"],[data-action="next"]){background:#e7f2ee;border-color:#bdd7ce;color:#215f53}
 .lesson-navigation button[data-action="home"]{background:#fff0dd;border-color:#e7ccaa;color:#85541f;border-radius:9px}
 .lesson-navigation button[data-action="modules"]{background:#efe8fa;border-color:#d3c4e8;color:#65448e;border-radius:9px}
+
+.shortcut-groups>section+section{margin-top:16px}.shortcut-groups h3{font-size:15px;margin:0 0 8px;color:#65448e}.shortcut-groups h4{font-size:13px;margin:8px 0;color:#52685f}
