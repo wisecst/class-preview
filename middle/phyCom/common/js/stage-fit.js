@@ -4,7 +4,7 @@
 (()=>{
  'use strict';
  const scriptURL=new URL(document.currentScript.src),base=new URL('../../',scriptURL);
- const modules=['led','buzzer','dc-motor','servo-motor'];
+ const modules=(window.phycomNavigation?.modules||[{id:'led'},{id:'buzzer'},{id:'dc-motor'},{id:'servo-motor'}]).map(m=>m.id);
  const validLesson=url=>url.origin===location.origin&&modules.some(name=>url.pathname===base.pathname+name+'/'||url.pathname===base.pathname+name+'/index.html');
  const frame=document.getElementById('phycomStage');
  if(!frame){
@@ -51,16 +51,18 @@
   const lesson=new URL(location.href);
   if(!validLesson(lesson))return;
   document.documentElement.style.visibility='hidden';
-  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-final-stage3');
+  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-bottom-nav1');
   location.replace(host.href);return;
  }
  const params=new URL(location.href).searchParams;
  const embedded=params.get('embedded')==='1'&&parent!==window;
  const student=params.get('student')==='1';
  const lessonValue=params.get('lesson');
- if(!lessonValue)return;
- const lesson=new URL(lessonValue,location.href);if(embedded)lesson.searchParams.set('v','20261009-final-stage3');
- if(!validLesson(lesson))return;
+ const lesson=lessonValue?new URL(lessonValue,location.href):null;
+ if(lesson&&embedded)lesson.searchParams.set('v','20261009-final-stage3');
+ if(lesson&&!validLesson(lesson))return;
+ let current=lesson?modules.find(id=>lesson.pathname===base.pathname+id+'/'||lesson.pathname===base.pathname+id+'/index.html'):null;
+ let navigation=null,homeView=null;
  const geometry=window.phycomStageGeometry,viewport=document.getElementById('phycomViewport');
  const notice=document.getElementById('phycomPortraitNotice');
  let metrics={scale:1},raf=0,presentation=false;
@@ -68,6 +70,7 @@
   const v=window.visualViewport,width=v?.width||innerWidth,height=v?.height||innerHeight;
   const style=getComputedStyle(viewport),safe={};
   for(const edge of ['left','right','top','bottom'])safe[edge]=parseFloat(style.getPropertyValue('--safe-'+edge))||0;
+  if(navigation&&!navigation.element.hidden)safe.bottom+=navigation.element.getBoundingClientRect().height;
   metrics=geometry.fit(width,height,safe,{left:v?.offsetLeft,top:v?.offsetTop});
   frame.style.transform=`scale(${metrics.scale})`;frame.style.left=metrics.x+'px';frame.style.top=metrics.y+'px';
   const phone=navigator.maxTouchPoints>0&&Math.min(screen.width,screen.height)<=600;
@@ -133,14 +136,13 @@
  });
  frame.addEventListener('load',()=>{
   document.title=frame.contentDocument?.title||document.title;schedule();syncFullscreen();
-  if(!embedded)return;
   const doc=frame.contentDocument,list=doc?.querySelector('#slideSidebarList');
   if(!list)return;
   let previous='';
   function report(){
    const items=[...list.children].map(b=>({label:b.textContent.trim(),active:b.classList.contains('active')}));
    const value=JSON.stringify(items);
-   if(value!==previous){previous=value;parent.postMessage({type:'info-toc',items},location.origin)}
+   if(value!==previous){previous=value;if(embedded)parent.postMessage({type:'info-toc',items},location.origin);else navigation?.update(current,items)}
   }
   new MutationObserver(report).observe(list,{subtree:true,attributes:true,childList:true,characterData:true});report();
   if(student){
@@ -175,5 +177,18 @@
   else if(d?.type==='info-jump')doc.querySelector('#slideSidebarList')?.children[d.index]?.click();
   else if(d?.type==='info-fullscreen'){presentation=!!d.on;syncFullscreen();schedule()}
  });
- frame.src=lesson.href;if(!embedded)history.replaceState(history.state,'',lesson.href);fit();
+ if(!embedded&&window.phycomNavigation){
+  const catalogue=window.phycomNavigation;
+  function open(id){if(id===current&&!homeView?.hidden)return;if(id===current&&frame.getAttribute('src')!=='about:blank')return;
+   const module=catalogue.modules.find(m=>m.id===id&&m.enabled);if(!module)return;
+   current=id;homeView.hidden=true;viewport.hidden=false;navigation.element.hidden=false;navigation.close();navigation.update(id);
+   const url=new URL(module.path,base);url.searchParams.set('v','20261009-bottom-nav1');frame.src=url.href;history.replaceState(history.state,'',url.href);schedule();
+  }
+  function home(){current=null;frame.src='about:blank';viewport.hidden=true;homeView.hidden=false;navigation.element.hidden=true;navigation.close();document.title='피지컬 컴퓨팅';history.replaceState(history.state,'',new URL('index.html',base).href)}
+  navigation=catalogue.create({home,previous:()=>frame.contentDocument?.querySelector('#prev')?.click(),next:()=>frame.contentDocument?.querySelector('#next')?.click(),select:open,fullscreen:toggleFullscreen});
+  navigation.element.classList.add('stage-navigation');document.body.append(navigation.element);
+  homeView=document.createElement('main');homeView.className='stage-module-home';const heading=document.createElement('h1');heading.textContent='피지컬 컴퓨팅';homeView.append(heading,catalogue.choices(open));document.body.append(homeView);
+  homeView.hidden=!!lesson;navigation.element.hidden=!lesson;navigation.update(current);if(!lesson)home();
+ }
+ if(lesson){frame.src=lesson.href;if(!embedded)history.replaceState(history.state,'',lesson.href)}fit();
 })();
