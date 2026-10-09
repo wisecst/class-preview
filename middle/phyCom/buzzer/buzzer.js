@@ -136,8 +136,8 @@ const studentRoot2=$('#studentWorkPage2'),student2Notes=window.buzzerStudentWork
 window.buzzerStudentWork2.init(studentRoot2,{start,noteBlock});
 for(const id of [3,4])window.buzzerStudentImageWorks.init(id,$('#studentWorkPage'+id),{start,noteBlock});
 // Reuse the existing compact Entry button on the controlling block.
-for(const root of [canonRoot,studentRoot,studentRoot2,$('#studentWorkPage3'),$('#studentWorkPage4')]){
- const button=root.querySelector('[data-direct-play]');
+for(const root of [birthdayRoot,canonRoot,studentRoot,studentRoot2,$('#studentWorkPage3'),$('#studentWorkPage4')]){
+ const button=root.querySelector('[data-direct-play],[data-buzzer-result="birthday"]');
  const block=root.querySelector('.repeat-block')||root.querySelector('.start-block');
  if(!button||!block)continue;
  button.className=block.classList.contains('repeat-block')?'entry-loop-run-btn':'entry-run-btn';
@@ -309,7 +309,7 @@ function openDialog(kind){if(dialog)closeDialog(false);returnFocus=document.acti
   if(kind==='canon')canonCompleted=true;
   content.innerHTML=kind==='triad'?triadScoreSVG():kind==='birthday'?scoreSVG():kind==='activity'?activityScoreSVG():'<div class="canon-score-view">'+canonScoreSVG()+'</div>';
   if(kind==='birthday')content.insertAdjacentHTML('beforeend','<div class="birthday-object"><img src="'+lessonBase+'cake-1.png" alt="생일케이크_1"><strong>생일케이크</strong></div>');
-  play(kind==='triad'?triad:kind==='birthday'?birthday:kind==='activity'?activityNotes:canon,true,kind,pages[page].querySelector(`[data-buzzer-result="${kind}"],[data-direct-play="${kind}"]`));
+  play(kind==='triad'?triad:kind==='birthday'?birthday:kind==='activity'?activityNotes:canon,kind==='triad'||kind==='canon',kind,pages[page].querySelector(`[data-buzzer-result="${kind}"],[data-direct-play="${kind}"]`));
  }
  if(['triad','birthday','canon','activity'].includes(kind)&&(kind!=='triad'||step>=limits[2])){window.lessonUI.completeResult(pages[page]);if(kind==='canon'){canonCompleted=true;completeButton.classList.add('complete-focus');}}
  $('.buzzer-dialog').focus();
@@ -319,7 +319,7 @@ function clearHighlight(){document.querySelectorAll('[data-note].playing,[data-s
 function stopAudio(){session++;canonRoot.querySelector('.student-code-scroll').scrollTop=0;canonRoot.querySelectorAll('.canon-score-view').forEach(view=>view.innerHTML=canonScoreSVG(0));window.buzzerStudentWork.reset();window.buzzerStudentWork2.reset();window.buzzerStudentImageWorks.reset();document.querySelectorAll('[data-direct-play].running,[data-buzzer-result].running').forEach(b=>{b.classList.remove('running');b.textContent=b.dataset.idleText;b.setAttribute('aria-pressed','false');});cancelAnimationFrame(frame);frame=0;clearHighlight();if(voice){try{voice.stop();}catch{}voice.disconnect();voice=null;}if(gain){gain.gain.cancelScheduledValues(0);gain.disconnect();gain=null;}}
 function closeDialog(restore=true){if(restore&&page===4&&dialog==='canon'){step=2;$('#next').disabled=false;}stopAudio();$('#pinDialog').close();dialog=null;const overlay=$('#dialogOverlay');overlay.hidden=true;overlay.classList.remove('pin13-image-result');$('.buzzer-dialog').classList.remove('entry-result-card');$('#dialogTitle').hidden=false;$('#dialogContent').innerHTML='';if(overlay.classList.contains('code-result')){const stage=overlay.parentElement;stage.classList.remove('code-result-open');overlay.classList.remove('code-result');$('.buzzer-dialog').setAttribute('aria-modal','true');(document.getElementById('lessonCanvas')||document.body).appendChild(overlay);}requestAnimationFrame(fitCode);if(restore&&returnFocus?.isConnected)returnFocus.focus();}
 async function play(notes,repeat=false,kind=dialog,button=null){
- stopAudio();if(kind==='student2')notes=window.buzzerStudentWork2.getPlayback();if(button){button.dataset.idleText=button.textContent;button.textContent=kind==='triad'||kind.startsWith('student')||kind==='canon'?'■':'■ 정지';button.classList.add('running');button.setAttribute('aria-pressed','true');}
+ stopAudio();if(kind==='student2')notes=window.buzzerStudentWork2.getPlayback();if(button){button.dataset.idleText=button.textContent;button.textContent='■';button.classList.add('running');button.setAttribute('aria-pressed','true');}
  if(kind==='student')window.buzzerStudentWork.reset();if(kind==='student2')window.buzzerStudentWork2.reset();
  const loop=repeat,speed=kind==='birthday'?1.5:kind==='canon'?canonBPM/60:1,token=session,status=$('.audio-status');
  try{audio=await ensureAudioReady();if(token!==session)return;

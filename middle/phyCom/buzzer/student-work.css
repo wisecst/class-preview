@@ -131,3 +131,6 @@
 :is(#canonPage,#studentWorkPage,#studentWorkPage2,#studentWorkPage3,#studentWorkPage4) :is(.entry-run-btn,.entry-loop-run-btn){flex-shrink:0;width:30px;height:28px;min-width:30px;padding:0;margin:0 0 0 10px;font-size:18px;line-height:1;align-self:center}
 
 :is(#canonPage,#studentWorkPage,#studentWorkPage2,#studentWorkPage3,#studentWorkPage4) .start-block:has([data-direct-play])>.play-dot{display:none}
+
+:is(#birthdayPage,#canonPage,#studentWorkPage,#studentWorkPage2,#studentWorkPage3,#studentWorkPage4) .start-block:has([data-direct-play],[data-buzzer-result="birthday"])>.play-dot{display:none}
+:is(#birthdayPage,#canonPage,#studentWorkPage,#studentWorkPage2,#studentWorkPage3,#studentWorkPage4) :is(.entry-run-btn,.entry-loop-run-btn){position:relative!important;left:auto!important;top:auto!important;transform:none!important;align-self:center}
