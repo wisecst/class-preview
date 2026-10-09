@@ -6,3 +6,19 @@
 .rotation-dial{position:relative;width:300px;height:220px;margin:auto}.dial-knob{position:absolute;left:73px;top:-5px;width:80px;height:80px;border-radius:50%;border:0;background:transparent;cursor:grab;touch-action:none}.dial-knob:focus-visible{outline:4px solid #218a7a}.dial-pointer{position:absolute;left:38px;top:12px;height:23px;width:5px;border-radius:4px;background:#fff;box-shadow:0 0 3px #000;transform-origin:50% 28px}
 
 .fan-project .project-code [data-step]:not(.entry-show){display:none!important}.fan-project .project-entry .project-toolbar-actions button:disabled{opacity:.35;cursor:default}.readouts{display:grid;grid-template-columns:1fr 95px;align-items:center;gap:0 12px}.readouts p{grid-column:1;margin:10px 0}.live-number{grid-column:2;grid-row:1/span 2;display:grid;place-items:center;height:100px;background:#f0b439;color:white;border-radius:15px;box-shadow:0 4px 0 #c38e23}.live-number b{font-size:58px}.live-number span{font-size:14px}
+
+/* Five-page assignment: scoped additions preserve common lesson styles. */
+.fan-project .intro-demo{position:relative;inset:auto;margin:12px auto 0;width:100%;height:555px;padding:10px 35px;box-shadow:none;border:0;background:transparent}
+.intro-demo .result-layout{height:100%;align-items:center}.intro-demo .rotation-dial{margin:0 auto}.intro-demo .fan-area .dc-fan-view{height:340px}.intro-demo .readouts{font-size:24px}
+.intro-demo input,.project-result input{display:none}.intro-demo .dial-knob{pointer-events:none}
+.fan-project .project-circuit #projectCircuit{height:575px}.circuit-progress{font-size:24px;margin:0;text-align:center;font-weight:700}
+.project-guide .guide-card p{font-size:28px}.project-guide .output-table{font-size:28px}
+.project-entry .project-map .number-field{background:#ffda53;color:#333;border-color:#d3b54b}
+.project-entry .project-code{padding-bottom:30px}.project-entry .project-palette{margin:22px 0 0;padding:10px 14px;width:max-content;max-width:100%;border:2px dashed #b4bdcb;border-radius:12px;background:#fff}
+.project-entry .project-code .repeat-body.repeat-show{display:block!important;margin-top:0!important;padding-top:0!important;padding-bottom:12px!important;border-left:12px solid #22b8df;border-bottom:12px solid #22b8df;border-radius:0 0 0 15px}
+.project-entry .project-code .repeat-body>.entry-block{margin-top:0!important;margin-bottom:0!important}
+.project-entry .project-code .repeat-block{margin-bottom:0!important}
+.project-entry .project-code-controls button{width:55px;height:48px;font-size:28px;line-height:1;padding:5px}
+.project-entry #pin13Modal{z-index:50}.project-entry .project-result{z-index:51}
+
+.fan-project [hidden]{display:none!important}

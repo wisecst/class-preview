@@ -51,7 +51,7 @@
   const lesson=new URL(location.href);
   if(!validLesson(lesson))return;
   document.documentElement.style.visibility='hidden';
-  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-fan-project2');
+  const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);host.searchParams.set('v','20261009-fan-five2');
   location.replace(host.href);return;
  }
  const params=new URL(location.href).searchParams;
@@ -59,7 +59,7 @@
  const student=params.get('student')==='1';
  const lessonValue=params.get('lesson');
  const lesson=lessonValue?new URL(lessonValue,location.href):null;
- if(lesson&&embedded)lesson.searchParams.set('v',lesson.pathname.includes('/projects/')?'20261009-fan-project2':'20261009-final-stage3');
+ if(lesson&&embedded)lesson.searchParams.set('v',lesson.pathname.includes('/projects/')?'20261009-fan-five2':'20261009-final-stage3');
  if(lesson&&!validLesson(lesson))return;
  let current=lesson?routes.find(m=>lesson.pathname===base.pathname+m.path||lesson.pathname===base.pathname+m.path+'index.html')?.id:null;
  let navigation=null,homeView=null;
@@ -145,7 +145,7 @@
    if(value!==previous){previous=value;if(embedded)parent.postMessage({type:'info-toc',items},location.origin);else navigation?.update(current,items)}
   }
   new MutationObserver(report).observe(list,{subtree:true,attributes:true,childList:true,characterData:true});report();
-  if(student){
+  if(student && !parent.location.pathname.startsWith('/2022-M-phycom/')){
    const names={'오정훈':'오OO','이예준':'이OO','백연정':'백OO','정아주':'정OO'};
    function anonymizeText(value){
     for(const [name,alias] of Object.entries(names)){
@@ -188,7 +188,7 @@
   function open(id){if(id===current&&!homeView?.hidden)return;if(id===current&&frame.getAttribute('src')!=='about:blank')return;
    const module=catalogue.lessons.find(m=>m.id===id&&m.enabled);if(!module)return;
    current=id;homeView.hidden=true;viewport.hidden=false;navigation.element.hidden=false;navigation.close();navigation.update(id);
-   const url=new URL(module.path,base);url.searchParams.set('v','20261009-fan-project2');frame.src=url.href;history.replaceState(history.state,'',url.href);schedule();
+   const url=new URL(module.path,base);url.searchParams.set('v','20261009-fan-five2');frame.src=url.href;history.replaceState(history.state,'',url.href);schedule();
   }
   function home(){current=null;frame.src='about:blank';viewport.hidden=true;homeView.hidden=false;navigation.element.hidden=true;navigation.close();document.title='피지컬 컴퓨팅';history.replaceState(history.state,'',new URL('index.html',base).href)}
   navigation=catalogue.create({home,previous:()=>frame.contentDocument?.querySelector('#prev')?.click(),next:()=>frame.contentDocument?.querySelector('#next')?.click(),select:open,fullscreen:toggleFullscreen});
