@@ -54,7 +54,10 @@
   const host=new URL('../stage.html',scriptURL);host.searchParams.set('lesson',lesson.href);
   location.replace(host.href);return;
  }
- const lessonValue=new URL(location.href).searchParams.get('lesson');
+ const params=new URL(location.href).searchParams;
+ const embedded=params.get('embedded')==='1'&&parent!==window;
+ const student=params.get('student')==='1';
+ const lessonValue=params.get('lesson');
  if(!lessonValue)return;
  const lesson=new URL(lessonValue,location.href);
  if(!validLesson(lesson))return;
@@ -81,6 +84,7 @@
   button.setAttribute('aria-label',on?'전체화면 종료':'전체화면으로 보기');button.title=on?'전체화면 종료':'전체화면';
  }
  async function toggleFullscreen(){
+  if(embedded&&parent.infoShell){await parent.infoShell.fullscreen();return}
   if(document.fullscreenElement){await document.exitFullscreen();return}
   if(presentation){presentation=false;schedule();syncFullscreen();return}
   try{await document.documentElement.requestFullscreen();presentation=false}
@@ -127,6 +131,38 @@
    event.preventDefault();child.document.body.dispatchEvent(new child.KeyboardEvent('keydown',{key:event.key,bubbles:true,cancelable:true}));
   }
  });
- frame.addEventListener('load',()=>{document.title=frame.contentDocument?.title||document.title;schedule();syncFullscreen()});
- frame.src=lesson.href;history.replaceState(history.state,'',lesson.href);fit();
+ frame.addEventListener('load',()=>{
+  document.title=frame.contentDocument?.title||document.title;schedule();syncFullscreen();
+  if(!embedded)return;
+  const doc=frame.contentDocument,list=doc?.querySelector('#slideSidebarList');
+  if(!list)return;
+  let previous='';
+  function report(){
+   const items=[...list.children].map(b=>({label:b.textContent.trim(),active:b.classList.contains('active')}));
+   const value=JSON.stringify(items);
+   if(value!==previous){previous=value;parent.postMessage({type:'info-toc',items},location.origin)}
+  }
+  new MutationObserver(report).observe(list,{subtree:true,attributes:true,childList:true,characterData:true});report();
+  if(student){
+   const names={'오정훈':'오OO','이예준':'이OO','백연정':'백OO','정아주':'정OO'};
+   function anonymize(root){
+    const walker=doc.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
+    while(node=walker.nextNode()){
+     if(node.parentElement?.closest('script,style'))continue;
+     let value=node.nodeValue;for(const [name,alias] of Object.entries(names))value=value.split(name).join(alias);
+     if(value!==node.nodeValue)node.nodeValue=value;
+    }
+   }
+   anonymize(doc.body);
+   new MutationObserver(()=>anonymize(doc.body)).observe(doc.body,{childList:true,subtree:true,characterData:true});
+  }
+ });
+ window.addEventListener('message',e=>{
+  if(!embedded||e.source!==parent||e.origin!==location.origin)return;
+  const d=e.data,doc=frame.contentDocument;if(!doc)return;
+  if(d?.type==='info-key')doc.querySelector(['ArrowLeft','PageUp'].includes(d.key)?'#prev':'#next')?.click();
+  else if(d?.type==='info-jump')doc.querySelector('#slideSidebarList')?.children[d.index]?.click();
+  else if(d?.type==='info-fullscreen'){presentation=!!d.on;syncFullscreen();schedule()}
+ });
+ frame.src=lesson.href;if(!embedded)history.replaceState(history.state,'',lesson.href);fit();
 })();

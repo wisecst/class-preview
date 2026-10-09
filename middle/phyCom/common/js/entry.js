@@ -49,7 +49,7 @@ function ledResult(mode,button=null,guided=false){
  if(button){button.classList.add('running');button.textContent='■'}
  const m=q('#entryLedTestModal'),t=q('#entryLedTestText'),l=m?.querySelector('.entry-led-test-light');
  const paint=on=>{l?.classList.toggle('off',!on);if(t)t.textContent=on?'LED가 켜졌습니다.':'LED가 꺼졌습니다.';m?.classList.add('show');m?.setAttribute('aria-hidden','false')};
- if(mode==='blink'){let on=true;paint(on);timer=setInterval(()=>{on=!on;paint(on)},200)}else paint(mode==='on'); if(guided)openSaveMenu();
+ if(mode==='blink'){let on=true;paint(on);timer=setInterval(()=>{on=!on;paint(on)},200)}else paint(mode==='on'); if(mode==='blink'&&step===steps.length)window.lessonUI.completeResult(q('.slide.active')); if(guided)openSaveMenu();
 }
 function render(){
  qa('[data-entry-step]').forEach(el=>{const n=+el.dataset.entryStep;el.classList.toggle('entry-show',n<=step);el.classList.toggle('entry-current',n===step&&step>0)});

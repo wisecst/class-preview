@@ -141,7 +141,7 @@ function resetCanonFlow(){canonCompleted=false;canonSaved=false;saveButton.disab
 function canonFinished(){canonCompleted=true;saveButton.disabled=false;saveWrap.classList.add('save-focus');canonRoot.querySelector('.canon-progress').textContent='연주 완료! 상단 저장 메뉴에서 저장하기를 눌러 주세요.';}
 saveButton.addEventListener('click',()=>{if(!canonCompleted)return;const visible=saveMenu.classList.toggle('show');saveMenu.setAttribute('aria-hidden',String(!visible));});
 canonRoot.querySelectorAll('.entry-save-item').forEach(b=>b.addEventListener('click',()=>{if(!canonCompleted)return;try{localStorage.setItem('buzzer-canon-work',JSON.stringify({title:'캐논',pin:3,notes:canon,tempo:canonBPM}));}catch{canonRoot.querySelector('.canon-progress').textContent='저장 공간을 사용할 수 없습니다. 다시 저장해 주세요.';return;}canonSaved=true;saveWrap.classList.remove('save-focus');saveMenu.classList.remove('show');saveMenu.setAttribute('aria-hidden','true');completeButton.disabled=false;completeButton.classList.add('complete-focus');canonRoot.querySelector('.canon-progress').textContent='저장 완료! 학습 완료를 눌러 주세요.';}));
-completeButton.addEventListener('click',()=>{if(!canonSaved)return;completeButton.classList.remove('complete-focus');canonRoot.querySelector('.canon-progress').textContent='캐논 연주 활동을 완료했습니다.';});
+completeButton.addEventListener('click',()=>{if(!canonCompleted)return;completeButton.classList.remove('complete-focus');canonRoot.querySelector('.canon-progress').textContent='캐논 연주 활동을 완료했습니다.';});
 resetCanonFlow();
 function renderTriad(){
  const root=$('#triadPage'),current=step===3?2:Math.min(step,7);
@@ -170,7 +170,7 @@ function renderCode(birth){if(!birth)renderTriad();requestAnimationFrame(fitCode
 function render(){pages.forEach((p,i)=>p.classList.toggle('active',i===page));document.body.classList.toggle('after-intro',(page>=2));document.body.classList.toggle('entry-page',page>=2);document.querySelectorAll('.slide-sidebar-item').forEach((b,i)=>{b.classList.toggle('active',i===page);if(i===page)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#subtitle').textContent=titles[page];$('#slides').textContent=window.hardwareConnect?.number(page,pages.length)||`${page+1} / ${pages.length}`;$('#prev').disabled=page===0&&step===0;$('#next').disabled=false;
  if(page===1){window.lessonCircuit.refresh();window.lessonCircuit.setStep(step);$('#circuitGuide').textContent=['VCC → 5V, GND → GND, IN → D3 순서로 연결합니다.','VCC → 5V : 전원 공급','GND → GND : 전원의 −극 연결','IN → D3 : 소리 제어 신호 연결'][step];}
  if(page>=2){if(page===9)renderActivity();else renderCode(page!==2);requestAnimationFrame(fitCode);}
- if(page===4&&step===1)play(canon,true,'canon',canonRoot.querySelector('[data-direct-play=canon]'));
+ if(page===4&&step===1)openDialog('canon');
  if(page===0&&step===1)openDialog('principle');else if(page===0&&step===3)openDialog('pins');else if(page===2&&step===3)openDialog('pin13');else if(page===2&&step===8)openDialog('triad');else if(page===3&&step===1)openDialog('birthday');
  if((page===6||page===7)&&step===1){const id=page===6?4:3;play(window.buzzerStudentImageWorks.works[id].notes,true,'student'+id,pages[page].querySelector('[data-direct-play]'));}
  if((page===5||page===8)&&step===1){const second=page===5;play(second?student2Notes:studentNotes,true,second?'student2':'student',pages[page].querySelector(second?'.student2-run':'.student-run'));}
@@ -297,11 +297,12 @@ function openDialog(kind){if(dialog)closeDialog(false);returnFocus=document.acti
  overlay.classList.toggle('pin13-image-result',kind==='pin13');$('#dialogTitle').hidden=kind==='pin13';
  if(kind==='pin13'){content.innerHTML=window.pin13ResultMarkup({image:assetBase+'OrangeBoard.png'});$('.buzzer-dialog').classList.add('entry-result-card');const b=$('#triadPage [data-buzzer-result="pin13"]');b.dataset.idleText=b.textContent;b.textContent='■';b.classList.add('running');}
  if(['triad','birthday','canon','activity'].includes(kind)){
-  if(kind==='canon')resetCanonFlow();
+  if(kind==='canon')canonCompleted=true;
   content.innerHTML=kind==='triad'?triadScoreSVG():kind==='birthday'?scoreSVG():kind==='activity'?activityScoreSVG():'<div class="canon-score-view">'+canonScoreSVG()+'</div>';
   if(kind==='birthday')content.insertAdjacentHTML('beforeend','<div class="birthday-object"><img src="'+lessonBase+'cake-1.png" alt="생일케이크_1"><strong>생일케이크</strong></div>');
   play(kind==='triad'?triad:kind==='birthday'?birthday:kind==='activity'?activityNotes:canon,true,kind,pages[page].querySelector(`[data-buzzer-result="${kind}"]`));
  }
+ if(['triad','birthday','canon','activity'].includes(kind)&&(kind!=='triad'||step>=limits[2])){window.lessonUI.completeResult(pages[page]);if(kind==='canon'){canonCompleted=true;completeButton.classList.add('complete-focus');}}
  $('.buzzer-dialog').focus();
 }
 function scrollPlayingCode(viewer,active){const scale=viewer.getBoundingClientRect().height/viewer.offsetHeight,offset=(active.getBoundingClientRect().top-viewer.getBoundingClientRect().top)/scale+viewer.scrollTop;if(offset<viewer.scrollTop||offset+active.getBoundingClientRect().height/scale>viewer.scrollTop+viewer.clientHeight)viewer.scrollTop=Math.max(0,offset-viewer.clientHeight*.25);}

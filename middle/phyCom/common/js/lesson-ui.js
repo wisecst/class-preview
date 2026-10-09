@@ -13,7 +13,25 @@
    break;
   }
  }, true);
+ const completed=new WeakSet();
+ const actions='.entry-save-btn,.entry-save-item,.entry-complete-btn';
+ function syncActions(){
+  document.querySelectorAll('.entry-slide').forEach(slide=>{
+   if(!slide.querySelector('.entry-save-btn'))return;
+   const on=completed.has(slide);
+   slide.querySelectorAll(actions).forEach(button=>{
+    if(button.disabled===on)button.disabled=!on;
+    if(on&&!button.classList.contains('enabled'))button.classList.add('enabled');
+   });
+  });
+ }
+ function completeResult(slide){if(!slide)return;completed.add(slide);syncActions()}
+ function installCompletion(){
+  syncActions();new MutationObserver(syncActions).observe(document.querySelector('main.wrap'),{subtree:true,childList:true,attributes:true,attributeFilter:['disabled']});
+ }
+ document.addEventListener('DOMContentLoaded',installCompletion,{once:true});
  window.lessonUI = {
+  completeResult,
   bindOutside(config) { windows.set(config.key, config); },
   direction(event) {
    if (/input|textarea|select/i.test(event.target.tagName) || event.target.isContentEditable) return 0;

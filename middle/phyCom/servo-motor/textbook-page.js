@@ -54,6 +54,7 @@
  }
  function openResult(el,btn){
   closeResults();slides[page].append(el);el.hidden=false;el.setAttribute('aria-hidden','false');
+  if((el===result&&step4>=basic.length)||(el===final&&step5>=lastStep5))window.lessonUI.completeResult(slides[page]);
   if(btn){runButton=btn;btn.textContent='■';btn.classList.add('running')}
   paint();
  }

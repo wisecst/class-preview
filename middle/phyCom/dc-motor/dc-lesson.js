@@ -22,7 +22,7 @@
   qa('.motor-motion-fan.running').forEach(el=>el.classList.remove('running'));
   q('.motor-program').classList.remove('running');
   if(runButton){runButton.textContent='▶';runButton.classList.remove('running');runButton=null}
-  q('.dc5-save').classList.remove('enabled');q('.dc5-complete').classList.remove('enabled');
+
  }
  function closePopup(){
   if(!principle.hidden){intro=2;principle.hidden=true;principle.setAttribute('aria-hidden','true')}
@@ -39,6 +39,7 @@
  }
  function openResult(el,btn){
   closeResults();el.hidden=false;el.setAttribute('aria-hidden','false');
+  if((el===result&&step4>=basic.length)||(el===final&&step5>=lastStep5))window.lessonUI.completeResult(slides[page]);
   if(btn){runButton=btn;btn.textContent='■';btn.classList.add('running')}paint();
  }
  function showPin(){

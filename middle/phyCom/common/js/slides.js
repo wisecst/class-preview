@@ -135,6 +135,7 @@ function startPage7Sweep(){
 function startPage7FinalResult(){
  if(pwmFinalTimer)return;
  pwmFinalPlayed=true;pwmFinalResultOpen=true;setPage7PwmPopup();
+ if(pwmCodeStep>=17)window.lessonUI.completeResult(document.querySelector('.entry-code-slide'));
  const replayButton=document.querySelector('#page7RunLoop');
  if(pwmCodeStep===18&&replayButton){replayButton.classList.add('running');replayButton.textContent='■';}
  const values=[0,100,200,255];let index=0;
@@ -606,7 +607,7 @@ function nextSlideStep(){
  if(si>=7&&si<=12){if(!getPwmStudyLesson(si)?.next?.())show(si+1);return;}
  if(si===5){advanceSetup();return;}
  if(si===4){advancePwm();return;}
- if(si===3&&!comparePopupShown){const p=document.querySelector('#pwmPinBoardPopup');p?.classList.add('show');p?.setAttribute('aria-hidden','false');comparePopupShown=true;return;}
+ if(si===3&&!comparePopupShown){const p=document.querySelector('#pwmPinBoardPopup');p?.classList.add('show');p?.setAttribute('aria-hidden','false');if(p)window.lessonUI.completeResult(document.querySelector('.slide.active'));comparePopupShown=true;return;}
  if(si===3&&comparePopupShown){document.querySelector('#pwmPinBoardPopup')?.classList.remove('show');show(4);return;}
  if(si===1&&window.lessonCircuit&&window.lessonCircuit.getStep()<3){window.lessonCircuit.next();}else if(si===2&&window.entryLesson){if(window.entryLesson.isFinished?.())show(si+1);else window.entryLesson.next();}else show(si+1)}
 nx.onclick=nextSlideStep;

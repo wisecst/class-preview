@@ -7,3 +7,9 @@
 .creator-credit{font:12px/20px system-ui;color:#536a61;text-align:center;margin:0;padding:2px 8px}.buzzer-shell>.creator-credit{grid-row:3;grid-column:1/-1}.lesson-screen>.creator-credit{margin-top:4px}
 .shell-fullscreen .module-toc{display:none}.shell-fullscreen .buzzer-shell{grid-template-columns:minmax(0,1fr)}.shell-fullscreen .buzzer-shell iframe{grid-column:1}
 @media(max-width:900px){.buzzer-shell{grid-template-columns:155px minmax(0,1fr)}.module-toc{padding:8px 6px}.module-toc button{font-size:12px;padding:7px}.module-switch button{padding:6px 12px;font-size:12px}}
+
+/* The original Stage owns the page list; keep only module/navigation chrome outside. */
+.buzzer-shell{grid-template-columns:minmax(0,1fr)!important}
+.buzzer-shell iframe{grid-column:1!important}
+.module-toc{display:none!important}
+@media(max-width:700px){.module-switch{gap:3px;padding:3px;flex-wrap:nowrap}.module-switch button{padding:5px 6px;font-size:11px}}

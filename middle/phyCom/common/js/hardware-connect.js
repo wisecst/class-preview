@@ -6,7 +6,7 @@
 (() => {
   "use strict";
   const q = (s) => document.querySelector(s),
-    asset = "../assets/";
+    asset = new URL("../../assets/", document.currentScript.src).href;
   const actionSteps = [0, 1, 2, 3, 4, 5];
   const original = [...document.querySelectorAll(".slide")];
   const page = document.createElement("section");
