@@ -21,8 +21,8 @@
 <path data-wire="S → D10" d="M 330.53 581.625 H 345 V 710 H 1285 V 407.55 H 1220.75" fill="none" stroke="#df8e15" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
 <g class="circuit-labels">
 <text x="35" y="125">가변저항 · OUT / VCC / GND</text><text x="35" y="475">DC모터 · G / V / S</text>
-<g transform="translate(555 15)"><rect x="-78" y="-18" width="156" height="36" rx="7" fill="#e34848"/><text text-anchor="middle" y="9" fill="white">5V → +</text></g>
-<g transform="translate(680 28)"><rect x="-88" y="-18" width="176" height="36" rx="7" fill="#39475a"/><text text-anchor="middle" y="9" fill="white">GND → −</text></g>
+<g transform="translate(510 20)"><rect x="-78" y="-18" width="156" height="36" rx="7" fill="#e34848"/><text text-anchor="middle" y="9" fill="white">5V → +</text></g>
+<g transform="translate(700 28)"><rect x="-88" y="-18" width="176" height="36" rx="7" fill="#39475a"/><text text-anchor="middle" y="9" fill="white">GND → −</text></g>
 <g transform="translate(570 144)"><rect x="-100" y="-18" width="200" height="36" rx="7" fill="#2570db"/><text text-anchor="middle" y="9" fill="white">OUT → A1</text></g>
 <g transform="translate(970 710)"><rect x="-95" y="-18" width="190" height="36" rx="7" fill="#df8e15"/><text text-anchor="middle" y="9" fill="white">S → D10</text></g></g></svg></section>
 <section class="slide project-guide" aria-label="3. 코드 작성 안내"><h2>3. 숫자 버튼과 변수 ‘단계’ 준비하기</h2><div class="guide-grid"><div class="guide-card"><h3>입력 → 변환 → 변수</h3><p>A1 입력값 <b>0~1023</b></p><span>↓</span><p><b>0~5</b>로 변환</p><span>↓</span><p>변수 <b>단계</b>에 저장</p></div><div class="guide-card"><h3>표시 → 출력</h3><p>숫자 버튼을 <b>단계 값</b> 모양으로</p><span>↓</span><p><b>단계 × 25</b></p><span>↓</span><p><b>D10</b> DC모터 출력</p></div></div><div class="output-table"><b>단계</b><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><b>D10 출력</b><span>0</span><span>25</span><span>50</span><span>75</span><span>100</span><span>125</span></div><p class="project-summary">먼저 숫자 버튼 오브젝트와 ‘단계’ 변수를 만든 뒤, 다음 페이지에서 코드를 연결합니다.</p></section>
