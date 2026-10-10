@@ -42,6 +42,7 @@
     const schedule=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(sync)};
     new MutationObserver(schedule).observe(wrap,{subtree:true,attributes:true,attributeFilter:['class','hidden'],childList:true});
     if(header&&typeof ResizeObserver==='function')new ResizeObserver(schedule).observe(header);
+
     sync();parent.lessonStage.syncFullscreen();
     window.addEventListener('load',schedule,{once:true});
    }
@@ -70,7 +71,7 @@
   const v=window.visualViewport,width=v?.width||innerWidth,height=v?.height||innerHeight;
   const style=getComputedStyle(viewport),safe={};
   for(const edge of ['left','right','top','bottom'])safe[edge]=parseFloat(style.getPropertyValue('--safe-'+edge))||0;
-  if(navigation&&!navigation.element.hidden)safe.bottom+=navigation.element.getBoundingClientRect().height;
+  if(navigation&&!navigation.element.hidden)safe.bottom=Math.max(safe.bottom,navigation.element.getBoundingClientRect().height);
   metrics=geometry.fit(width,height,safe,{left:v?.offsetLeft,top:v?.offsetTop});
   frame.style.transform=`scale(${metrics.scale})`;frame.style.left=metrics.x+'px';frame.style.top=metrics.y+'px';
   const phone=navigator.maxTouchPoints>0&&Math.min(screen.width,screen.height)<=600;
@@ -134,9 +135,43 @@
    event.preventDefault();child.document.body.dispatchEvent(new child.KeyboardEvent('keydown',{key:event.key,bubbles:true,cancelable:true}));
   }
  });
+ function installSwipe(doc){
+  const wrap=doc?.querySelector('main.wrap');if(!wrap)return;
+  // Passive touch detection delegates to the same controls as keyboard/navigation.
+    let swipe=null;
+    const blocked=target=>{
+     if(!(target instanceof doc.defaultView.Element))return true;
+     if(target.closest('button,a,input,textarea,select,label,[contenteditable]:not([contenteditable="false"]),[role="button"],[role="slider"],[role="spinbutton"],[role="dialog"],[aria-modal="true"],dialog,[draggable="true"],[onclick],.entry-workspace,.modal,.popup,.overlay'))return true;
+     for(let el=target;el&&el!==wrap;el=el.parentElement){
+      if(/dial|knob|slider|joystick|draggable/i.test(el.id+' '+el.className))return true;
+     }
+     return false;
+    };
+    docTouch('touchstart',event=>{
+     swipe=null;
+     const target=event.target;
+     if(event.touches.length!==1||!target.closest?.('.slide.active')||blocked(target))return;
+     const touch=event.touches[0];
+     swipe={id:touch.identifier,x:touch.clientX,y:touch.clientY};
+    });
+    docTouch('touchcancel',()=>{swipe=null});
+    docTouch('touchend',event=>{
+     const start=swipe;swipe=null;
+     if(!start||event.touches.length||blocked(event.target))return;
+     const touch=[...event.changedTouches].find(t=>t.identifier===start.id);
+     if(!touch)return;
+     const dx=touch.clientX-start.x,dy=touch.clientY-start.y;
+     const threshold=48/Math.max(metrics.scale,.01);
+     if(Math.abs(dx)<threshold||Math.abs(dx)<Math.abs(dy)*2.5)return;
+     const control=doc.getElementById(dx<0?'next':'prev');
+     if(control&&!control.disabled)control.click();
+    });
+    function docTouch(type,listener){doc.addEventListener(type,listener,{passive:true})}
+ }
  frame.addEventListener('load',()=>{
   document.title=frame.contentDocument?.title||document.title;schedule();syncFullscreen();
-  const doc=frame.contentDocument,list=doc?.querySelector('#slideSidebarList');
+  const doc=frame.contentDocument;installSwipe(doc);
+  const list=doc?.querySelector('#slideSidebarList');
   if(!list)return;
   let previous='';
   function report(){
@@ -193,6 +228,7 @@
   function home(){current=null;frame.src='about:blank';viewport.hidden=true;homeView.hidden=false;navigation.element.hidden=true;navigation.close();document.title='피지컬 컴퓨팅';history.replaceState(history.state,'',new URL('index.html',base).href)}
   navigation=catalogue.create({home,previous:()=>frame.contentDocument?.querySelector('#prev')?.click(),next:()=>frame.contentDocument?.querySelector('#next')?.click(),select:open,fullscreen:toggleFullscreen});
   navigation.element.classList.add('stage-navigation');document.body.append(navigation.element);
+  if(typeof ResizeObserver==='function')new ResizeObserver(schedule).observe(navigation.element);
   homeView=document.createElement('main');homeView.className='stage-module-home';const heading=document.createElement('h1');heading.textContent='피지컬 컴퓨팅';const projectHeading=document.createElement('h2');projectHeading.textContent='프로젝트';homeView.append(heading,catalogue.choices(open),projectHeading,catalogue.choices(open,catalogue.projects));document.body.append(homeView);
   homeView.hidden=!!lesson;navigation.element.hidden=!lesson;navigation.update(current);if(!lesson)home();
  }
