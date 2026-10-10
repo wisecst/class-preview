@@ -57,3 +57,8 @@
 .fan-project .project-entry .project-number{top:4px;bottom:auto;right:110px;width:84px;height:84px;z-index:40}
 .fan-project .project-entry .project-number b{font-size:46px}
 .fan-project .project-toolbar-actions button.enabled{opacity:1;outline:4px solid #ffd22f;outline-offset:2px}
+
+/* Data and looks puzzle connectors copied from the normal DC code page. */
+.fan-project .project-code .data-block,.fan-project .project-code .looks-block{border-radius:0 29px 29px 0;padding-left:28px}
+.fan-project .project-code .data-block:before,.fan-project .project-code .looks-block:before{content:"";position:absolute;left:16px;top:-2px;width:20px;height:9px;background:inherit;clip-path:polygon(0 0,100% 0,75% 100%,25% 100%)}
+.fan-project .project-code .data-block:after,.fan-project .project-code .looks-block:after{content:"";position:absolute;left:16px;bottom:-9px;width:20px;height:10px;background:inherit;clip-path:polygon(25% 0,75% 0,100% 100%,0 100%);z-index:2}
