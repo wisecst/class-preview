@@ -68,7 +68,7 @@
 .project-entry .entry-save-btn.enabled,.project-entry .entry-complete-btn.enabled{outline:4px solid #ffd22f;outline-offset:2px}
 .project-entry .project-palette [hidden]{display:none!important}
 .project-entry .project-map.hardware-block{color:#fff}
-.project-entry .project-map .number-field{background:white;color:#1e3f49;border-color:#a8d2d3}
+.project-entry .project-map .number-field{background:#ffca36;color:#1e3f49;border-color:#a8d2d3}
 .study-result input{display:block;width:100%;accent-color:#278d7b}
 .study-result .dial-knob{left:73px;top:14px;width:100px;height:100px;background:#252525;box-shadow:inset 0 0 0 3px #161616}
 .study-result .dial-pointer{left:48px;top:16px;height:30px;transform-origin:50% 34px}
@@ -76,3 +76,19 @@
 .study-entrybot{position:relative;text-align:center}.study-entrybot img{width:150px}
 .study-speech{display:block;padding:12px 22px;margin-bottom:15px;border:2px solid #cfe0e9;border-radius:18px;background:white;color:#243447;font-size:32px;font-weight:800}
 .study-result .fan-area{width:280px;height:280px}.study-result .fan-area svg{width:260px;height:230px}
+
+/* Existing Entry yellow value color, restricted to the requested input boxes. */
+.project-entry .looks-block .study-greeting{background:#ffca36}
+/* Study output only: the existing dial, Entrybot and fan fill two equal halves. */
+.study-result .result-layout{display:block}
+.study-result .study-input-panel{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:40px;height:100%}
+.study-result.motor-check .result-layout{display:grid;grid-template-columns:1fr 1fr;gap:30px;height:calc(100% - 70px)}
+.study-result.motor-check .study-input-panel{display:flex;flex-direction:column;gap:8px;background:#edf7f2;border-radius:18px;padding:12px;box-sizing:border-box}
+.study-result.motor-check .dial-area{padding:0;width:100%;background:transparent}
+.study-result.motor-check .dial-area input{height:22px;margin:8px 0}
+.study-result.motor-check .dial-area p{font-size:19px;margin:5px 0}
+.study-result.motor-check .study-entrybot{display:flex;align-items:center;gap:16px}
+.study-result.motor-check .study-entrybot img{width:100px}
+.study-result.motor-check .study-speech{margin:0;font-size:27px}
+.study-result.motor-check .fan-area{width:100%;height:100%}
+.study-result.motor-check .fan-area svg{width:100%;height:100%;max-height:440px}
