@@ -18,7 +18,6 @@
 
 
 
-.project-entry 
 .project-entry #pin13Modal{z-index:50}.project-entry .project-result{z-index:51}
 
 .fan-project [hidden]{display:none!important}
@@ -34,7 +33,7 @@
 .fan-project .project-number{width:150px;height:150px}.fan-project .project-number b{font:800 95px Arial,sans-serif}
 /* Reuse the normal DC lesson's Entry looks category and darker dropdown. */
 .fan-project .project-code .looks-block{background:#fb0232;border-color:#cf0028}
-.fan-project .project-code .looks-block>.field{background:#cf0028;border-color:#b90023;color:#fff;border-radius:6px}
+.fan-project .project-code .looks-block #taskShape>.field{background:#cf0028;border-color:#b90023;color:#fff;border-radius:6px}
 /* The value reporter uses the common hardware category rather than another palette. */
 .fan-project .project-map.hardware-block{display:inline-flex!important;position:relative;min-width:0;width:max-content;height:auto;min-height:0;margin:0;padding:4px 9px;border-radius:24px;font-size:18px;box-shadow:inset 0 -3px rgba(0,0,0,.12)}
 .fan-project .project-map.hardware-block:before,.fan-project .project-map.hardware-block:after{display:none}
