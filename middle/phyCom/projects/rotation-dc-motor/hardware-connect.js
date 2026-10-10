@@ -126,7 +126,7 @@
   sidebar.type = "button";
   sidebar.className = "hc-sidebar-item";
   sidebar.innerHTML =
-    '<span class="sidebar-page-no">4</span><span>' + (document.body.dataset.motor === "servo" ? "하드웨어 연결" : "4. 하드웨어 연결") + '</span>';
+    '<span class="sidebar-page-no">4</span><span>' + "하드웨어 연결" + '</span>';
   const list = q("#slideSidebarList");
   list.children[2].after(sidebar);
   [...list.querySelectorAll(".slide-sidebar-item")].forEach((b, i) => {
