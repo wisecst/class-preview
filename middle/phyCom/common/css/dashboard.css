@@ -39,9 +39,11 @@
 .preparing .card-arrow{opacity:.3}.available .card-arrow{opacity:1}
 
 /* Selected tab and its complete content share a single pastel outline. */
-.unit-content{border:2px solid var(--unit-colour);border-radius:20px 0 20px 20px;background:#ffffffd9;padding:0 14px 14px}
-.unit-content .unit-description{display:flex;align-items:center;gap:24px;text-align:left;height:68px;margin:0 0 12px;padding:14px 12px;background:transparent;border-bottom:1px solid var(--unit-colour);border-radius:0}
+.unit-content{border:2px solid var(--unit-colour);border-radius:20px 0 20px 20px;background:#fff;padding:0 14px 14px}
+.dashboard-tabs button[aria-selected="true"]{position:relative;z-index:1;border:2px solid var(--unit-colour);border-bottom:0}
+.dashboard-tabs button[aria-selected="true"]::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-2px;height:4px;background:var(--tab-active);border-left:2px solid var(--unit-colour);border-right:2px solid var(--unit-colour)}
+.unit-content .unit-description{display:flex;align-items:center;gap:24px;text-align:left;height:56px;margin:0 0 12px;padding:8px 12px;background:transparent;border-bottom:1px solid var(--unit-colour);border-radius:0}
 .unit-description strong{font-family:"Jua","Malgun Gothic",sans-serif;font-size:32px;font-weight:700;white-space:nowrap}
 .unit-description span{font-size:22px;font-weight:400}
 .device-panel>h2{gap:10px;white-space:nowrap}
-.device-panel>h2 .panel-description{margin:0 0 0 4px;font-family:"Malgun Gothic",sans-serif;font-size:15px;font-weight:400;line-height:1.4;white-space:normal}
+.device-panel>h2 .panel-description{margin:0 0 0 4px;font-family:"Malgun Gothic",sans-serif;font-size:15px;font-weight:400;line-height:1.4;white-space:nowrap}
