@@ -95,3 +95,16 @@
 
 
 .study-panel-title{display:none}.motor-check>h2{visibility:hidden}.motor-check .study-panel-title{display:block;font-size:28px;margin:0 0 16px;text-align:center;color:#183653}.motor-check #studyFan{position:relative}.motor-check #studyFan .study-panel-title{position:absolute;top:0;left:0;width:100%}
+
+/* Connection checks stay beside the unchanged code workspace. */
+.project-study #studyPinModal,
+.project-study #studyResult{
+  left:auto;right:2%;top:110px;bottom:56px;width:40%;
+  box-sizing:border-box;padding:24px 20px;
+}
+.project-study #studyResult .result-layout{width:100%;gap:20px}
+.project-study #studyResult .study-input-panel{gap:20px}
+.project-study #studyResult .dial-area{padding:12px}
+.project-study #studyResult .rotation-dial{zoom:.7}
+.project-study #studyResult .study-panel-title{font-size:22px}
+.project-study #studyResult.motor-check .dial-area{padding:0}
