@@ -108,3 +108,13 @@
 .project-study #studyResult .rotation-dial{zoom:.7}
 .project-study #studyResult .study-panel-title{font-size:22px}
 .project-study #studyResult.motor-check .dial-area{padding:0}
+
+/* Use the task's upper-right whitespace without changing any code geometry. */
+.fan-project #projectResult{
+  left:auto;right:2%;top:60px;bottom:auto;width:40%;height:270px;
+  box-sizing:border-box;padding:12px;
+}
+.fan-project #projectResult h2{
+  font-size:20px!important;margin:0 28px 8px 0;
+}
+.fan-project #projectResult .result-layout{zoom:.43}
