@@ -9,14 +9,6 @@ window.phycomDevices=Object.freeze([
   },
   {
     "group": "input",
-    "id": "rotation",
-    "name": "가변저항",
-    "description": "다이얼로 입력값 조절하기",
-    "image": "RotationSensor.png",
-    "sprite": null
-  },
-  {
-    "group": "input",
     "id": "ultrasonic",
     "name": "초음파센서",
     "description": "물체까지의 거리 감지하기",
@@ -29,6 +21,14 @@ window.phycomDevices=Object.freeze([
     "name": "빛센서",
     "description": "주변의 밝기 감지하기",
     "image": "LightSensor.png",
+    "sprite": null
+  },
+  {
+    "group": "input",
+    "id": "rotation",
+    "name": "가변저항",
+    "description": "다이얼로 입력값 조절하기",
+    "image": "RotationSensor.png",
     "sprite": null
   },
   {
