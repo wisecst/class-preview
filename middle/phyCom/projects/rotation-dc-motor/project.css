@@ -92,3 +92,6 @@
 .study-result.motor-check .study-speech{margin:0;font-size:27px}
 .study-result.motor-check .fan-area{width:100%;height:100%}
 .study-result.motor-check .fan-area svg{width:100%;height:100%;max-height:440px}
+
+
+.study-panel-title{display:none}.motor-check>h2{visibility:hidden}.motor-check .study-panel-title{display:block;font-size:28px;margin:0 0 16px;text-align:center;color:#183653}.motor-check #studyFan{position:relative}.motor-check #studyFan .study-panel-title{position:absolute;top:0;left:0;width:100%}

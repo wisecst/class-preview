@@ -2,6 +2,7 @@
  const q=s=>document.querySelector(s),pages=[...document.querySelectorAll('main.wrap>.slide')],list=q('#slideSidebarList');
  const titles=['프로젝트 안내','회로 연결','코드 작성 안내','연결 확인','과제 해결'];
  let page=0,step=0,circuit=0,pinSeen=false,completed=false,timer=null,introTimer=null,studyStep=0,studyPinSeen=false,studyInputSeen=false,studyCompleted=false,studyTimer=null,studyValue=0;
+ const dialLegDuration=14000/1.5;
  const result=q('#projectResult'),pin=q('#pin13Modal'),code=q('#projectCode');
  // Reuse page 1's existing execution DOM, including dial, readouts and fan.
  const template=q('#introDemo .result-layout').cloneNode(true);
@@ -56,7 +57,7 @@ const instructions=['다음 버튼을 누르며 코드를 완성해 보세요.',
  }
  function cycle(scope,prefix){
   const started=performance.now();let frame;
-  function animate(now){const phase=((now-started)/14000)%2;const value=Math.round(1023*(phase<=1?phase:2-phase));updateDemo(scope,prefix,value);frame=requestAnimationFrame(animate);if(prefix)introTimer=frame;else timer=frame}
+  function animate(now){const phase=((now-started)/dialLegDuration)%2;const value=Math.round(1023*(phase<=1?phase:2-phase));updateDemo(scope,prefix,value);frame=requestAnimationFrame(animate);if(prefix)introTimer=frame;else timer=frame}
   updateDemo(scope,prefix,0);frame=requestAnimationFrame(animate);return frame;
  }
  function openResult(){if(step!==16)return;stop();result.hidden=false;completed=true;window.lessonUI.completeResult(taskPage);timer=cycle(result,'');renderCode();requestAnimationFrame(fitCode)}
@@ -73,10 +74,10 @@ const instructions=['다음 버튼을 누르며 코드를 완성해 보세요.',
  function updateStudy(value){studyValue=Math.max(0,Math.min(1023,Math.round(value)));q('#studyInput').value=studyValue;q('#studySpeech').textContent=studyValue;q('#studyDial').setAttribute('aria-valuenow',studyValue);q('#studyDial .dial-pointer').style.transform=`rotate(${-120+studyValue/1023*240}deg)`}
  const studyFan=q('#studyFan'),fanTemplate=q('#introDemo .fan-area svg').cloneNode(true);
  fanTemplate.querySelectorAll('[id]').forEach(el=>el.id=el.id.replace(/^intro-/,'study-'));
- fanTemplate.querySelectorAll('[mask],[clip-path]').forEach(el=>{for(const key of ['mask','clip-path'])if(el.hasAttribute(key))el.setAttribute(key,el.getAttribute(key).replace(/intro-/g,'study-'))});studyFan.append(fanTemplate);
+ fanTemplate.querySelectorAll('[mask],[clip-path]').forEach(el=>{for(const key of ['mask','clip-path'])if(el.hasAttribute(key))el.setAttribute(key,el.getAttribute(key).replace(/intro-/g,'study-'))});studyFan.insertBefore(fanTemplate,studyFan.firstChild);
  function openStudyPin(){stop();studyPin.hidden=false;studyPinSeen=true;renderStudy();requestAnimationFrame(fitCode)}
- function openStudyResult(){if(studyStep<6)return;stop();studyResult.hidden=false;studyInputSeen=true;studyFan.hidden=studyStep<7;studyResult.classList.toggle('motor-check',studyStep>=7);studyResult.querySelector('h2').textContent=studyStep>=7?'D10 출력 · DC모터 작동 확인':'가변저항 입력 확인';studyResult.classList.toggle('running',studyStep>=7);studyResult.style.setProperty('--fan-period','.42s');if(studyStep===7){studyCompleted=true;window.lessonUI.completeResult(studyPage)}renderStudy();startStudyDemo();requestAnimationFrame(fitCode)}
- function startStudyDemo(){const started=performance.now();function animate(now){const phase=((now-started)/14000)%2;updateStudy(1023*(phase<=1?phase:2-phase));studyTimer=requestAnimationFrame(animate)}updateStudy(0);studyTimer=requestAnimationFrame(animate)}
+ function openStudyResult(){if(studyStep<6)return;stop();studyResult.hidden=false;studyInputSeen=true;studyFan.hidden=studyStep<7;studyResult.classList.toggle('motor-check',studyStep>=7);studyResult.querySelector('h2').textContent='가변저항 입력 확인';studyResult.classList.toggle('running',studyStep>=7);studyResult.style.setProperty('--fan-period','.42s');if(studyStep===7){studyCompleted=true;window.lessonUI.completeResult(studyPage)}renderStudy();startStudyDemo();requestAnimationFrame(fitCode)}
+ function startStudyDemo(){const started=performance.now();function animate(now){const phase=((now-started)/dialLegDuration)%2;updateStudy(1023*(phase<=1?phase:2-phase));studyTimer=requestAnimationFrame(animate)}updateStudy(0);studyTimer=requestAnimationFrame(animate)}
  q('#studyInput').addEventListener('input',e=>updateStudy(Number(e.target.value)));
  // Pointer motion changes raw A1 input continuously, independently of task levels.
  const dial=q('#studyDial');let dragging=false,lastAngle=0;
@@ -103,3 +104,4 @@ const instructions=['다음 버튼을 누르며 코드를 완성해 보세요.',
  q('#projectComplete').addEventListener('click',()=>{if(!completed)return;localStorage.setItem('phycom-project-rotation-dc-motor-complete','1');q('#projectComplete').textContent='과제제출 ✓'});
  window.addEventListener('pagehide',()=>{stop();cancelAnimationFrame(introTimer)});show(0);
 })();
+
