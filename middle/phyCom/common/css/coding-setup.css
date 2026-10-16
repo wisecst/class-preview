@@ -1,0 +1,18 @@
+@import url("./entry-setup.css?v=20261014-1");
+
+/* Existing LED setup UI is shared; additions only place its initial code snapshot/assets. */
+.entry-setup-slide .coding-setup-initial{position:absolute;inset:76px 20px 58px;z-index:8;overflow:visible}
+.entry-setup-slide:has(.entry-setup-layout[data-setup-step="0"]) .entry-setup-layout{visibility:hidden}
+.entry-setup-slide .coding-setup-initial[hidden]{display:none!important}
+.entry-setup-slide .coding-setup-initial .ec-program{width:100%!important;display:flex!important;flex-direction:column;align-items:flex-start;gap:58px!important}
+.entry-setup-slide .coding-setup-initial .ec-block{font-size:23px}
+.entry-setup-slide .coding-setup-initial .ec-script{min-width:max-content}
+.entry-setup-slide .coding-setup-initial .ec-run{display:none}
+.entry-setup-slide .entry-result .entry-led-icon,.entry-setup-slide .entry-selected-list .entry-led-icon{object-fit:contain}
+.entry-setup-slide[data-setup-kind="dc"] .led-search-callout,.entry-setup-slide[data-setup-kind="servo"] .led-search-callout{display:none!important}
+.entry-setup-slide .entry-result[data-selected="true"]{outline:4px solid #ffd400!important}
+.entry-setup-slide[data-setup-kind="dc"] .entry-setup-led,.entry-setup-slide[data-setup-kind="servo"] .entry-setup-led{width:120px!important;height:120px!important}
+.entry-setup-slide .entry-scene-add{display:inline-flex!important}
+
+
+.entry-object-info .coding-setup-object-thumb{display:inline-flex;align-items:center;justify-content:center;flex:0 0 46px;width:46px;height:46px}.coding-setup-object-thumb svg{width:100%;height:100%;display:block}

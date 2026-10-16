@@ -1,0 +1,22 @@
+/* The existing lesson owns progression/results; shared Entry owns block geometry. */
+.fan-project .fan-entry-source{display:none!important}
+.fan-project .fan-common-code{position:absolute;left:22px;top:82px;right:20px;transform:none!important;zoom:1}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-block{font-size:26px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-row{min-height:52px;padding-top:6px;padding-bottom:6px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-dropdown,.fan-project :is(.fan-common-code,.fan-common-palette) .ec-number{font-size:25px;min-height:34px;padding:5px 10px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-reporter>.ec-row{height:auto;min-height:38px;padding:2px 9px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-reporter{font-size:22px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-reporter .ec-dropdown,.fan-project :is(.fan-common-code,.fan-common-palette) .ec-reporter .ec-number{font-size:22px}
+.fan-project .fan-common-palette{position:absolute;left:22px;z-index:30;padding:8px 12px;border:2px dashed #b4bdcb;border-radius:12px;background:#fff;transform:none!important}
+.fan-project .fan-common-palette .ec-block{font-size:26px}
+.fan-project .fan-common-guide{position:relative;width:max-content;max-width:100%;transform:none!important}
+.fan-project .fan-common-guide .ec-block{font-size:28px}
+.fan-project .fan-common-guide .ec-reporter{font-size:24px}
+.fan-project .fan-common-guide .ec-reporter>.ec-row{height:auto;min-height:38px}
+.fan-project #guideVariable+.fan-common-guide .ec-block{font-size:30px}
+.fan-project .fan-common-code.ec-multiple-scripts{gap:24px!important;width:calc(100% - 42px)!important}
+
+/* Reserve the completed slot height from the first preview; no per-step fit. */
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-row{box-sizing:border-box;height:58px;min-height:58px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-reporter>.ec-row{height:40px;min-height:40px}
+.fan-project :is(.fan-common-code,.fan-common-palette) .ec-reporter[data-category="calculation"]>.ec-row{height:46px;min-height:46px}
