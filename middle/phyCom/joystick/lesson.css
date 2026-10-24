@@ -1,0 +1,39 @@
+.joystick-lesson{--setup-stage-height:40%}
+.joystick-concept>div{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;gap:16px}
+.joystick-concept img{width:100%;height:100%;min-height:0;object-fit:contain}
+.joystick-concept .motor-module{flex:1;width:100%;margin:0}
+.joystick-lesson .entry-program:before{display:none}
+.joystick-lesson .entry-code-slide:has(.ec-popup:not([hidden])) .entry-stage{width:calc(50% - 100px)}
+.joystick-lesson .entry-top-actions{margin-left:auto;display:flex;gap:10px}
+.joystick-lesson .entry-top-actions button{font:inherit}
+.joystick-result{font-size:22px}
+.joystick-result h3{font-size:27px;margin:0 0 8px}
+.joystick-result p{margin:6px 0}
+.joystick-result canvas{display:block;width:100%;height:auto;object-fit:contain;outline:none;border:2px solid #d2bb8b;border-radius:8px}
+.joystick-result canvas:focus{border-color:#e2a42a}
+.joystick-device{display:block;width:210px;height:140px;object-fit:contain;margin:auto}
+.joystick-input{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.joystick-input label{display:flex;align-items:center;gap:12px}
+.joystick-input input{flex:1;min-width:0;accent-color:#1b998a}
+.joystick-input button{font:inherit;padding:10px;border:2px solid #75a8be;border-radius:12px;background:#edf8ff;touch-action:none}
+.joystick-input button[aria-pressed=true]{background:#ffde63}
+.joystick-lesson .entry-object-icon img,.joystick-lesson .entry-result img.entry-led-icon{object-fit:contain}
+
+
+.joystick-lesson #workspace #board{left:3%;top:14%}
+.joystick-lesson #workspace #module{left:75%;top:18%}
+
+.joystick-stage{position:relative}
+.joystick-stage .entry-stage-variable,.joystick-lesson .entry-setup-slide .entry-stage-variable{left:50%;top:8px;width:max-content;transform:translateX(-50%);z-index:2}
+.joystick-stage .entry-stage-variable span,.joystick-lesson .entry-setup-slide .entry-stage-variable span{max-width:none}
+
+
+
+.joystick-visual{position:relative;width:210px;height:140px;margin:8px auto 20px}
+.joystick-visual>img{display:block;width:100%;height:100%;object-fit:contain}
+.joystick-stick{position:absolute;left:57%;top:40%;width:64px;height:55px;border-radius:48%;background:radial-gradient(ellipse at 40% 30%,#333,#202020 65%,#0f0f0f);box-shadow:0 5px 3px #1119;transform:translate(-50%,-50%)}
+.joystick-arrow{position:absolute;font-size:30px;line-height:32px;color:#b8c3ca;font-weight:900}
+.joystick-arrow[data-direction="왼쪽"]{left:-25px;top:42px}.joystick-arrow[data-direction="오른쪽"]{right:-25px;top:42px}.joystick-arrow[data-direction="위"]{left:104px;top:-20px}.joystick-arrow[data-direction="아래"]{left:104px;bottom:-22px}
+.joystick-push{position:absolute;right:-80px;bottom:16px;font-size:22px;color:#b8c3ca;font-weight:800}
+.joystick-visual .active{color:#ad6500;background:#ffe783;border-radius:6px}
+.joystick-inquiry [data-input-next]{font:inherit;padding:6px 18px;border:2px solid #43817b;border-radius:8px;background:#edf8ff;color:#244153}
