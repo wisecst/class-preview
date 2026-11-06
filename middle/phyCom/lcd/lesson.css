@@ -1,0 +1,39 @@
+#concept .device-concept-layout{display:flex;align-items:center;justify-content:center;gap:30px}
+#concept .lcd-concept-left{width:min(1120px,100%);min-width:0}
+#concept .device-concept-modules figure{width:100%}
+#concept .device-concept-modules .lcd-module-image{display:block;width:100%;height:auto;object-fit:contain}
+#concept .lcd-concept-right{display:none;flex-direction:column;gap:8px;min-height:0;align-self:stretch;flex:1}
+#concept[data-view="reading"] .lcd-concept-left{width:340px;margin-right:auto;align-self:flex-start;margin-top:50px}
+#concept .device-concept-reading{inset:150px 24px 20px auto;width:840px}
+#concept .device-concept-reading article{font-size:28px;line-height:1.6}
+#concept .device-concept-lesson{position:absolute;right:calc(100% + 24px);top:230px;width:330px;box-sizing:border-box;margin:0;border-radius:14px;font-size:26px}
+#concept .device-concept-lesson strong{font-size:26px}
+#concept[data-view="animation"] .lcd-concept-left{width:460px}
+#concept[data-view="animation"] .lcd-concept-right{display:flex}
+#concept .lcd-examples{display:block;flex:1;width:100%;height:0;min-height:0;object-fit:contain}
+#lcdPinRoles .pin-role-card[hidden]{display:none}
+#lcdPinRoles .lcd-pin-image{position:relative;width:100%}
+#lcdPinRoles .pin-module-image{width:100%;height:auto}
+#lcdPinRoles .lcd-pin-focus{position:absolute;left:1.8%;width:9%;height:10%;border:5px solid #ffe65e;border-radius:12px;transform:translate(-25%,-50%);box-shadow:0 0 0 4px #b7790080}
+#concept .lcd-signal-animation{flex:none;padding:8px 10px;border:1px solid #bbd3e1;border-radius:12px;background:#f5f9fc;color:#23394a}
+#concept .lcd-signal-animation h3{margin:0;font-size:18px;line-height:1.3}
+#concept .lcd-data{height:29px;margin:3px 0;font:700 24px/29px monospace}
+#concept .lcd-data [hidden],#concept .lcd-signal-animation svg [hidden]{display:none}
+#concept [data-bit-status]{margin-left:12px;font-size:16px}
+#concept .lcd-signal-animation svg{display:block;width:100%;height:185px;font:16px sans-serif;fill:#23394a}
+#concept [data-sda-wave]{fill:none;stroke:#267bc1;stroke-width:4}
+#concept [data-scl-wave]{fill:none;stroke:#d78b16;stroke-width:4}
+#concept [data-sda-label],#concept [data-sda-level]{fill:#1769aa}
+#concept [data-scl-label],#concept [data-scl-level]{fill:#a45d00}
+#concept [data-data-token]{fill:#1769aa}
+#concept .lcd-display-frame{fill:#28622d}
+#concept .lcd-display-title{font-weight:700}
+#concept .lcd-display-screen{fill:#adc835}
+#concept .lcd-process{fill:#e1eaf0;stroke:#94aebb;stroke-width:1}
+#concept .lcd-process.active{fill:#ffe65e;stroke:#ab7800;stroke-width:2}
+#concept .lcd-process-arrow{fill:none;stroke:#65849a;stroke-width:2}
+#concept .lcd-small{font-size:12px}
+#concept .lcd-dot{fill:#a0bb2e}
+#concept .lcd-dot.on{fill:#203d10}
+#concept .lcd-animation-caption{min-height:22px;margin:3px 0;font-size:16px;line-height:1.35}
+#concept .lcd-animation-note{margin:0;font-size:13px;line-height:1.35}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LCD · 피지컬 컴퓨팅</title>
+<link rel="stylesheet" href="../common/css/stage-host.css">
+<link rel="stylesheet" href="../common/css/module-navigation.css">
+</head>
+<body>
+<div id="phycomViewport"><iframe id="phycomStage" data-phycom-stage title="LCD 수업" width="1600" height="900" allow="autoplay; fullscreen" allowfullscreen></iframe></div>
+<div id="phycomPortraitNotice" hidden><span>화면을 가로로 돌려주세요.</span></div>
+<script src="../common/js/stage-geometry.js"></script>
+<script src="../common/js/module-navigation.js"></script>
+<script>
+const url=new URL(location);url.searchParams.set('lesson',new URL('lesson.html',location).href);history.replaceState(null,'',url);
+</script>
+<script src="../common/js/stage-fit.js"></script>
+<script>history.replaceState(history.state,'',new URL('index.html',location))</script>
+</body>
+</html>
